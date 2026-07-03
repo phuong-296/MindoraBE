@@ -196,17 +196,17 @@ INSERT INTO content_library (id, title, content_type, description, thumbnail_url
   -- Nhạc thư giãn
   ('40000000-0000-0000-0000-000000000001', 'Mưa rơi bên hiên — Lo-fi chill',        'music',
    'Nhạc lo-fi nhẹ nhàng với tiếng mưa, giúp thư giãn và tập trung.',
-   'https://images.unsplash.com/photo-1501426026826-31c667bdf23d', 'https://example.com/music/lofi-rain.mp3',
+   'https://images.unsplash.com/photo-1501426026826-31c667bdf23d', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
    'calm', 45, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '50 days', now()),
 
   ('40000000-0000-0000-0000-000000000002', 'Piano nhẹ nhàng cho giấc ngủ',          'music',
    'Tuyển tập piano acoustic giúp bạn dễ ngủ hơn.',
-   'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0', 'https://example.com/music/piano-sleep.mp3',
+   'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
    'sleep', 60, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '50 days', now()),
 
   ('40000000-0000-0000-0000-000000000003', 'Tiếng sóng biển thư giãn',              'music',
    'Âm thanh sóng biển tự nhiên, phù hợp để thiền và thư giãn.',
-   'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 'https://example.com/music/ocean-waves.mp3',
+   'https://images.unsplash.com/photo-1507525428034-b723cf961d3e', 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
    'calm', 30, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '48 days', now()),
 
   -- Bài viết
