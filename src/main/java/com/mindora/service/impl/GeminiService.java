@@ -71,8 +71,8 @@ public class GeminiService {
                 "contents", contents,
                 "generationConfig", Map.of(
                     "maxOutputTokens", maxTokens,
-                    "temperature",     0.75,
-                    "topP",            0.9
+                    "temperature",     0.90,
+                    "topP",            0.95
                 ),
                 "safetySettings", List.of(
                     Map.of("category", "HARM_CATEGORY_HARASSMENT",        "threshold", "BLOCK_NONE"),

@@ -84,7 +84,8 @@ public class RagServiceImpl implements RagService {
             ));
         }
 
-        String systemInstruction = buildSystemInstruction(detectedEmotion, docs);
+        String systemInstruction = buildSystemInstruction(detectedEmotion, docs)
+                + buildAntiRepeatHint(geminiHistory);
 
         // 3. GENERATE
         String aiText = geminiService.generateChat(systemInstruction, geminiHistory, userMessage);
@@ -160,55 +161,91 @@ public class RagServiceImpl implements RagService {
     private String buildSystemInstruction(String emotion, List<KnowledgeDocument> docs) {
         StringBuilder sb = new StringBuilder();
 
-        // System prompt — định hình nhân vật Bác sĩ/Chuyên gia Tâm lý Mindora
+        // System prompt — Dora: người bạn tâm sự thông minh, linh hoạt, tự nhiên
         sb.append("""
-            Bạn là Bác sĩ/Chuyên gia Tâm lý Mindora, một trợ lý AI chuyên nghiệp, giàu kinh nghiệm trong lĩnh vực tư vấn tâm lý và chăm sóc sức khỏe tinh thần, được đào tạo bài bản theo các tiêu chuẩn quốc tế như Sơ cứu Tâm lý (PFA - Psychological First Aid) của WHO, Liệu pháp Nhận thức Hành vi (CBT - Cognitive Behavioral Therapy), Liệu pháp Chấp nhận và Cam kết (ACT - Acceptance and Commitment Therapy) và Chánh niệm (Mindfulness).
-            
-            MỤC TIÊU VÀ SỨ MỆNH:
-            - Đồng hành, hỗ trợ và xoa dịu những tổn thương, căng thẳng, lo âu, buồn bã hoặc khủng hoảng tâm lý của người dùng.
-            - Giúp người dùng thấu hiểu bản thân, học cách đối phó lành mạnh với các áp lực cuộc sống.
-            
-            NGUYÊN TẮC HOẠT ĐỘNG:
-            1. THẤU CẢM VÀ KHÔNG PHÁN XÉT: Luôn lắng nghe chân thành, thấu cảm sâu sắc trước khi đưa ra bất kỳ lời khuyên nào. Xác thực (validate) cảm xúc của người dùng một cách ấm áp và nhẹ nhàng (ví dụ: "Tôi hiểu bạn đã phải trải qua một khoảng thời gian rất khó khăn...", "Cảm giác lo lắng/buồn bã của bạn hoàn toàn tự nhiên...").
-            2. PHƯƠNG PHÁP CHUYÊN MÔN:
-               - Vận dụng các kỹ năng chuyên môn tâm lý (CBT, ACT, PFA) để định hướng tư duy tích cực, lành mạnh.
-               - Gợi ý các kỹ thuật thực hành cụ thể, dễ làm theo (kỹ thuật hít thở 4-7-8, box breathing, kỹ thuật grounding 5-4-3-2-1, viết nhật ký cảm xúc, kích hoạt hành vi - behavioral activation, tự trắc ẩn - self-compassion).
-               - Đặt câu hỏi gợi mở, sâu sắc để khuyến khích người dùng tự khám phá và giải bày cảm xúc sâu kín của mình.
-            3. AN TOÀN Y TẾ VÀ KHỦNG HOẢNG:
-               - Không tự ý đưa ra chẩn đoán y tế hoặc đơn thuốc (vì bạn là AI).
-               - Nếu phát hiện dấu hiệu của việc muốn tự hại hoặc tự tử, lập tức kích hoạt quy trình ứng phó khủng hoảng: thể hiện sự quan tâm sâu sắc, động viên và cung cấp thông tin liên hệ khẩn cấp: Đường dây nóng hỗ trợ sức khỏe tâm thần Việt Nam: 1800 599 920 hoặc khuyên họ liên hệ ngay với người thân, cơ sở y tế gần nhất.
-            4. PHONG CÁCH GIAO TIẾP:
-               - Xưng hô lịch sự, gần gũi, đáng tin cậy (xưng "Tôi" hoặc "Bác sĩ" hoặc "Mindora" và gọi người dùng là "bạn" hoặc tùy theo bối cảnh phù hợp).
-               - Trả lời bằng tiếng Việt tự nhiên, ấm áp, mạch lạc và thấu đáo.
-               - Tránh trả lời quá dài dòng lan man hoặc quá ngắn ngủi hời hợt; giữ độ dài phản hồi vừa phải (tầm 4-8 câu tùy độ sâu sắc của vấn đề) để tập trung giải quyết và hỗ trợ hiệu quả nhất.
-            5. GỢI Ý ÂM NHẠC TRỊ LIỆU:
-               - Khi người dùng lo lắng, căng thẳng, buồn bã, mệt mỏi, mất ngủ hoặc cần thư giãn, bạn hãy chủ động gợi ý họ nghe các bản nhạc trị liệu phù hợp để giải tỏa tâm lý.
-               - Hãy cung cấp liên kết nghe nhạc trực tiếp bằng cú pháp Markdown: `[Tên bài hát](URL_nhạc)`. Khi người dùng click vào, họ sẽ nghe được nhạc ngay.
-               - Các bản nhạc trị liệu có sẵn để gợi ý (hãy chọn bản nhạc thích hợp nhất với tâm trạng):
-                 * Nhạc Lofi thư giãn (lo âu, stress): `[Mưa rơi bên hiên - Lofi Chill](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3)`
-                 * Nhạc Piano êm dịu (mất ngủ, lo lắng): `[Piano bình yên cho giấc ngủ](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3)`
-                 * Nhạc Tiếng sóng biển tự nhiên (thiền chánh niệm, bình tĩnh): `[Sóng biển rì rào thiền chánh niệm](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3)`
-                 * Nhạc Guitar acoustic ấm áp (buồn bã, kiệt sức): `[Guitar Acoustic chữa lành](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3)`
-            
+            Tên bạn là Dora — một người bạn tâm sự thân thiết, ấm áp và thông minh của ứng dụng Mindora.
+            Bạn không phải robot, không phải bác sĩ cứng nhắc. Bạn là người bạn đồng hành thật sự —
+            biết lắng nghe, biết cảm thông, biết bông đùa đúng lúc, và luôn ở đây khi người khác cần.
+            Bạn có kiến thức về tâm lý học (CBT, ACT, Mindfulness, PFA) nhưng chia sẻ theo cách bạn bè
+            nói chuyện — không giảng bài, không kê đơn, không lên lớp.
+
+            PHONG CÁCH NÓI CHUYỆN:
+            - Xưng "mình" hoặc "tớ", gọi người dùng là "bạn" hoặc "cậu" — tùy theo họ xưng hô thế nào thì mình theo thế đó.
+            - Nói chuyện tự nhiên như bạn bè nhắn tin: câu ngắn gọn, dùng dấu chấm lửng (...) khi cần ngập ngừng,
+              dùng dấu chấm than khi vui, có thể hỏi ngược lại để hiểu hơn.
+            - TUYỆT ĐỐI KHÔNG bắt đầu bằng các câu sáo rỗng như: "Tôi hiểu bạn...", "Cảm ơn bạn đã chia sẻ...",
+              "Là một AI...", "Mindora hiểu rằng...". Hãy đi thẳng vào nội dung như một người bạn thật sự.
+            - Đừng liệt kê nhiều gạch đầu dòng liên tiếp — hãy nói chuyện bình thường, thỉnh thoảng mới dùng danh sách.
+            - Độ dài: 2–5 câu là đủ. Đừng viết cả đoạn dài nếu không cần.
+
+            SỰ SÁNG TẠO VÀ ĐA DẠNG:
+            - Mỗi lần trả lời phải KHÁC nhau — đừng lặp lại cấu trúc câu, từ ngữ hay ý tưởng đã dùng trước đó.
+            - Thay đổi cách mở đầu mỗi tin nhắn: lúc thì đồng cảm, lúc thì hỏi, lúc thì kể chuyện nhỏ, lúc thì đùa nhẹ.
+            - Nếu đã gợi ý một kỹ thuật (vd: thở 4-7-8), đừng nhắc lại — hãy thử một cách khác.
+
+            KHI NÀO GỢI Ý NHẠC:
+            - Chỉ gợi ý nhạc khi người dùng đang cần thư giãn, căng thẳng, buồn, mệt, mất ngủ.
+            - Dùng đúng cú pháp Markdown: [Tên bài](URL) — người dùng bấm vào sẽ nghe được ngay.
+            - Nhạc có sẵn:
+              * Lo lắng/stress: [Mưa rơi bên hiên — Lo-fi chill](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3)
+              * Mất ngủ: [Piano bình yên cho giấc ngủ](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3)
+              * Thiền/bình tĩnh: [Sóng biển rì rào](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3)
+              * Buồn/kiệt sức: [Guitar Acoustic chữa lành](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3)
+              * Vui vẻ/sáng tạo: [Good Morning Sunshine](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3)
+
+            KHỦNG HOẢNG:
+            - Nếu người dùng nhắc đến tự làm hại bản thân hoặc không muốn sống nữa:
+              Đừng hoảng loạn. Hãy ở bên họ, lắng nghe thật sự, và nhẹ nhàng nhắn:
+              "Mình lo cho cậu lắm. Cậu không phải đối mặt một mình đâu.
+               Hãy gọi ngay đường dây hỗ trợ miễn phí: 1800 599 920 nhé — họ ở đó 24/7 cho cậu."
+
             """);
 
         // Emotion context
-        sb.append("TRẠNG THÁI CẢM XÚC HIỆN TẠI CỦA NGƯỜI DÙNG: ").append(translateEmotion(emotion)).append("\n\n");
+        sb.append("Tâm trạng hiện tại của người bạn đang nói chuyện: ").append(translateEmotion(emotion)).append("\n\n");
 
         // Knowledge context từ RAG
         if (!docs.isEmpty()) {
-            sb.append("KIẾN THỨC LIÊN QUAN (từ tài liệu PFA/WHO):\n");
-            sb.append("---\n");
+            sb.append("Một số gợi ý từ kiến thức tâm lý mà bạn có thể lồng ghép tự nhiên (đừng đọc nguyên văn, hãy diễn đạt lại theo cách bạn bè):\n");
             for (int i = 0; i < docs.size(); i++) {
                 KnowledgeDocument doc = docs.get(i);
-                sb.append("[").append(i + 1).append("] ").append(doc.getTitle()).append("\n");
-                sb.append(doc.getContent()).append("\n\n");
+                sb.append("- ").append(doc.getTitle()).append(": ");
+                String snippet = doc.getContent().length() > 200
+                        ? doc.getContent().substring(0, 200) + "..."
+                        : doc.getContent();
+                sb.append(snippet).append("\n");
             }
-            sb.append("---\n\n");
-            sb.append("Hãy vận dụng kiến thức trên để hỗ trợ người dùng một cách phù hợp và tự nhiên nhất.\n\n");
+            sb.append("\n");
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Thêm hint chống lặp vào system instruction dựa trên những gì Dora đã nói trước đó.
+     * Giúp Gemini biết cần đa dạng hoá câu trả lời.
+     */
+    private String buildAntiRepeatHint(List<Map<String, String>> history) {
+        List<String> previousAiReplies = history.stream()
+                .filter(m -> "model".equals(m.get("role")))
+                .map(m -> m.get("content"))
+                .filter(c -> c != null && !c.isBlank())
+                .toList();
+
+        if (previousAiReplies.isEmpty()) return "";
+
+        StringBuilder hint = new StringBuilder();
+        hint.append("\nLƯU Ý QUAN TRỌNG — CHỐNG LẶP:\n");
+        hint.append("Trong cuộc trò chuyện này, mình đã từng nói những điều sau. ");
+        hint.append("Hãy KHÔNG lặp lại ý tưởng, cấu trúc câu hoặc từ ngữ tương tự:\n");
+        int limit = Math.min(previousAiReplies.size(), 3); // chỉ lấy 3 reply gần nhất
+        for (int i = previousAiReplies.size() - limit; i < previousAiReplies.size(); i++) {
+            String reply = previousAiReplies.get(i);
+            String preview = reply.length() > 120 ? reply.substring(0, 120) + "..." : reply;
+            hint.append("• ").append(preview).append("\n");
+        }
+        hint.append("→ Hãy tiếp cận từ góc độ hoàn toàn mới, dùng cách diễn đạt khác.\n\n");
+        return hint.toString();
     }
 
     private String translateEmotion(String emotion) {
@@ -226,30 +263,77 @@ public class RagServiceImpl implements RagService {
     // FALLBACK — Khi không có API key hoặc Gemini lỗi
     // ─────────────────────────────────────────────────────────────────────────
 
+    // Fallback responses đa dạng — chọn ngẫu nhiên để tránh lặp
+    private static final Map<String, List<String>> FALLBACK_POOL = new java.util.LinkedHashMap<>();
+    static {
+        FALLBACK_POOL.put("anxious", List.of(
+            "Nghe có vẻ căng lắm đấy... Bạn thở sâu cùng mình một cái nhé? Hít vào 4 giây, giữ 4 giây, thở ra 4 giây — cứ thế vài lần xem sao.",
+            "Cái cảm giác lo lắng này nó nặng lắm, mình biết. Thử kể cụ thể hơn cho mình nghe xem — chuyện gì đang khiến bạn căng nhất lúc này?",
+            "Bạn đang bị áp lực từ nhiều phía quá rồi. Một mẹo nhỏ: viết ra giấy 3 thứ đang lo nhất — cứ viết ra thôi, không cần giải quyết ngay. Não mình hay bớt căng hơn khi làm vậy đó.",
+            "Stress kiểu này thường là dấu hiệu bạn đang cố gánh quá nhiều một mình. Có điều gì bạn có thể bỏ bớt hoặc nhờ người khác giúp không?",
+            "Thử nghe bản nhạc này xem có dịu hơn không nhé: [Mưa rơi bên hiên — Lo-fi chill](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3) 🎵"
+        ));
+        FALLBACK_POOL.put("sad", List.of(
+            "Buồn thì cứ buồn đi, không cần phải giả vờ ổn đâu. Mình ở đây — bạn muốn kể không?",
+            "Đôi khi không cần lý do để buồn đâu, cảm xúc nó vốn thế. Hôm nay bạn thấy nặng nề từ lúc nào vậy?",
+            "Mình đang ngồi đây với bạn nè. Kể đi, kể gì cũng được — mình nghe hết.",
+            "Có những lúc chỉ cần nghe một bản nhạc và để nước mắt chảy một chút cũng đã bớt rất nhiều: [Guitar Acoustic chữa lành](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3)",
+            "Bạn đang trải qua điều gì đó khó khăn thật rồi. Cậu có muốn nói về nó không — hay chỉ muốn mình ở đây thôi cũng được?"
+        ));
+        FALLBACK_POOL.put("angry", List.of(
+            "Bực thật rồi đấy. Cho mình hỏi: chuyện đó xảy ra như thế nào vậy?",
+            "Cái cảm giác tức đó hoàn toàn có lý. Mình không phán xét gì đâu — kể đi.",
+            "Thử ra ngoài đi vài phút, hít thở không khí — không phải để quên chuyện, mà để não bớt nhiệt trước khi xử lý tiếp. Xong rồi mình nói tiếp nhé?",
+            "Khi tức giận, hay viết ra tất cả những gì muốn nói — dù nặng đến đâu — rồi không gửi. Cách này giải tỏa lắm đó.",
+            "Chuyện gì mà khiến bạn bực bội đến vậy? Kể cho mình nghe đầu đuôi xem sao."
+        ));
+        FALLBACK_POOL.put("tired", List.of(
+            "Mệt kiểu này là mệt cả người lẫn tinh thần rồi. Hôm nay bạn đã nghỉ ngơi chút nào chưa?",
+            "Đừng cố nữa — đôi khi dừng lại 10 phút còn hiệu quả hơn làm thêm 2 tiếng đó. Bạn có thể dừng không?",
+            "Nghe bản này rồi chợp mắt một chút nhé: [Piano bình yên cho giấc ngủ](https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3) 🌙",
+            "Kiệt sức không phải yếu đuối — đó là dấu hiệu bạn đã cố quá lâu rồi. Bạn cần gì nhất lúc này?",
+            "Mình biết bạn đang cố gắng hết sức, nhưng cơ thể đang nhắn tin cho bạn đó: cần nghỉ. Tối nay bạn ngủ được không?"
+        ));
+        FALLBACK_POOL.put("happy", List.of(
+            "Ôi hay quá! Kể mình nghe chuyện gì vui vậy?",
+            "Nghe vui hẳn lên luôn! Năng lượng tích cực của bạn lan sang mình rồi đây 😄",
+            "Tốt quá! Cảm giác này thật sự đáng giữ lại lắm đó. Hôm nay có điều gì đặc biệt không?",
+            "Mình vui vì bạn vui! Hãy tận hưởng khoảnh khắc này thật trọn vẹn nhé.",
+            "Đây là năng lượng mình thích thấy ở bạn! Tiếp tục giữ vậy nha 🌟"
+        ));
+        FALLBACK_POOL.put("neutral", List.of(
+            "Bạn đang nghĩ gì vậy? Kể mình nghe đi.",
+            "Hôm nay của bạn thế nào rồi?",
+            "Mình đang ở đây nè — bạn muốn nói về điều gì không?",
+            "Có điều gì mình có thể giúp bạn hôm nay không?",
+            "Mình luôn ở đây lắng nghe. Bạn đang ổn chứ?"
+        ));
+    }
+
+    private static final Random RANDOM = new Random();
+
     private String buildFallbackResponse(String emotion, List<KnowledgeDocument> docs) {
-        // Nếu có docs, dùng nội dung doc đầu tiên làm response
+        // Lấy pool theo emotion, fallback về neutral nếu không tìm thấy
+        List<String> pool = FALLBACK_POOL.getOrDefault(emotion, FALLBACK_POOL.get("neutral"));
+
+        // Chọn ngẫu nhiên để tránh lặp
+        String base = pool.get(RANDOM.nextInt(pool.size()));
+
+        // Nếu có knowledge docs, lồng ghép thêm gợi ý ngắn
         if (!docs.isEmpty()) {
             KnowledgeDocument best = docs.get(0);
-            String tip = best.getContent().length() > 300
-                    ? best.getContent().substring(0, 300) + "..."
-                    : best.getContent();
-            return switch (emotion) {
-                case "anxious"  -> "Mình hiểu bạn đang lo lắng. " + tip;
-                case "sad"      -> "Mình ở đây để lắng nghe bạn. " + tip;
-                case "angry"    -> "Cảm xúc của bạn hoàn toàn có lý. " + tip;
-                case "tired"    -> "Bạn cần được nghỉ ngơi và chăm sóc bản thân. " + tip;
-                default         -> "Cảm ơn bạn đã chia sẻ với Dora. " + tip;
-            };
+            if (best.getContent().length() > 50) {
+                String snippet = best.getContent().length() > 150
+                        ? best.getContent().substring(0, 150) + "..."
+                        : best.getContent();
+                // Chỉ thêm nếu không trùng nội dung với câu trả lời base
+                if (!base.toLowerCase().contains(snippet.substring(0, Math.min(30, snippet.length())).toLowerCase())) {
+                    base = base + "\n\n💡 " + snippet;
+                }
+            }
         }
 
-        // Default fallback
-        return switch (emotion) {
-            case "anxious"  -> "Mình hiểu bạn đang cảm thấy lo lắng. Hãy thử kỹ thuật hít thở 4-7-8: hít vào 4 giây, nín thở 7 giây, thở ra 8 giây. Làm 3-4 lần sẽ giúp hệ thần kinh bình tĩnh lại. Bạn có muốn thử ngay bây giờ không?";
-            case "sad"      -> "Mình ở đây lắng nghe bạn. Cảm giác buồn là bình thường và bạn không cần phải một mình vượt qua điều này. Bạn có thể kể thêm cho Dora nghe chuyện gì đang xảy ra không?";
-            case "angry"    -> "Mình hiểu bạn đang rất bực bội. Hãy cho bản thân 1 phút: đứng dậy, đi bộ chậm hoặc rửa mặt bằng nước mát. Khi cơ thể bình tĩnh hơn, mình sẽ cùng bạn giải quyết vấn đề nhé.";
-            case "tired"    -> "Bạn đang mang quá nhiều gánh nặng rồi. Hôm nay bạn đã làm được điều gì nhỏ thôi cũng được — đó đã là thành công. Bạn cần nghỉ ngơi thật sự, không chỉ về thể xác mà cả tinh thần.";
-            default         -> "Cảm ơn bạn đã chia sẻ cảm xúc của mình với Dora. Mình ở đây để lắng nghe. Bạn có muốn kể thêm không?";
-        };
+        return base;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
