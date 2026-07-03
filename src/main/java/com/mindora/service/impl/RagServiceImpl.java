@@ -64,12 +64,30 @@ public class RagServiceImpl implements RagService {
         log.info("[RAG] Retrieved {} docs for emotion='{}' message='{}'",
                  docs.size(), detectedEmotion, userMessage.substring(0, Math.min(50, userMessage.length())));
 
-        // 2. AUGMENT
-        List<MessageResponse> history = getRecentHistory(conversationId);
-        String prompt = buildPrompt(userMessage, detectedEmotion, docs, history);
+        // 2. AUGMENT & PREPARE HISTORY
+        List<MessageResponse> rawHistory = getRecentHistory(conversationId);
+        List<Map<String, String>> geminiHistory = new ArrayList<>();
+
+        // rawHistory is ordered DESC (newest first). The first element is the message we just saved
+        int startIndex = 0;
+        if (!rawHistory.isEmpty() && rawHistory.get(0).role().equals("user")) {
+            startIndex = 1;
+        }
+
+        // Add to history in chronological order (oldest first)
+        for (int i = rawHistory.size() - 1; i >= startIndex; i--) {
+            MessageResponse msg = rawHistory.get(i);
+            String role = msg.role().equals("user") ? "user" : "model";
+            geminiHistory.add(Map.of(
+                "role", role,
+                "content", msg.content()
+            ));
+        }
+
+        String systemInstruction = buildSystemInstruction(detectedEmotion, docs);
 
         // 3. GENERATE
-        String aiText = geminiService.generate(prompt);
+        String aiText = geminiService.generateChat(systemInstruction, geminiHistory, userMessage);
 
         if (aiText == null || aiText.isBlank()) {
             aiText = buildFallbackResponse(detectedEmotion, docs);
@@ -136,12 +154,10 @@ public class RagServiceImpl implements RagService {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // STEP 2: AUGMENT — Build prompt
+    // STEP 2: AUGMENT — Build system instruction
     // ─────────────────────────────────────────────────────────────────────────
 
-    private String buildPrompt(String userMessage, String emotion,
-                               List<KnowledgeDocument> docs,
-                               List<MessageResponse> history) {
+    private String buildSystemInstruction(String emotion, List<KnowledgeDocument> docs) {
         StringBuilder sb = new StringBuilder();
 
         // System prompt — định hình nhân vật Bác sĩ/Chuyên gia Tâm lý Mindora
@@ -177,7 +193,7 @@ public class RagServiceImpl implements RagService {
             """);
 
         // Emotion context
-        sb.append("TRẠNG THÁI CẢM XÚC NGƯỜI DÙNG: ").append(translateEmotion(emotion)).append("\n\n");
+        sb.append("TRẠNG THÁI CẢM XÚC HIỆN TẠI CỦA NGƯỜI DÙNG: ").append(translateEmotion(emotion)).append("\n\n");
 
         // Knowledge context từ RAG
         if (!docs.isEmpty()) {
@@ -189,22 +205,8 @@ public class RagServiceImpl implements RagService {
                 sb.append(doc.getContent()).append("\n\n");
             }
             sb.append("---\n\n");
-            sb.append("Hãy vận dụng kiến thức trên để hỗ trợ người dùng một cách phù hợp.\n\n");
+            sb.append("Hãy vận dụng kiến thức trên để hỗ trợ người dùng một cách phù hợp và tự nhiên nhất.\n\n");
         }
-
-        // Chat history
-        if (!history.isEmpty()) {
-            sb.append("LỊCH SỬ CUỘC TRÒ CHUYỆN:\n");
-            for (MessageResponse msg : history) {
-                String role = msg.role().equals("user") ? "Người dùng" : "Bác sĩ";
-                sb.append(role).append(": ").append(msg.content()).append("\n");
-            }
-            sb.append("\n");
-        }
-
-        // User message
-        sb.append("Người dùng: ").append(userMessage).append("\n");
-        sb.append("Bác sĩ:");
 
         return sb.toString();
     }
@@ -256,9 +258,9 @@ public class RagServiceImpl implements RagService {
 
     private List<MessageResponse> getRecentHistory(UUID conversationId) {
         return messageRepo
-                .findByConversationIdOrderByCreatedAtAsc(
+                .findRecentMessages(
                         conversationId,
-                        PageRequest.of(0, HISTORY_TURNS))
+                        PageRequest.of(0, HISTORY_TURNS + 1))
                 .getContent()
                 .stream()
                 .map(this::toResponse)
