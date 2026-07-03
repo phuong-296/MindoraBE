@@ -348,3 +348,180 @@ INSERT INTO expert_connections (id, user_id, expert_id, status, trigger_reason, 
    'Người dùng yêu cầu tư vấn trước kỳ thi. Đã kết thúc sau khi tình trạng cải thiện.',
    now() - interval '20 days', now() - interval '20 days', now() - interval '14 days')
 ON CONFLICT (id) DO NOTHING;
+
+
+-- ============================================================
+-- Mindora — Music Patch: Thêm 20 bài nhạc theo cảm xúc
+-- Chạy sau khi đã chạy data.sql
+-- Tất cả URL dùng SoundHelix (có thể phát trực tiếp)
+-- mood_tag: calm | sleep | happy | sad | energy
+-- ============================================================
+
+INSERT INTO content_library (id, title, content_type, description, thumbnail_url, content_url, mood_tag, duration_minutes, is_active, created_by, created_at, updated_at) VALUES
+
+  -- ======= CALM - Thư giãn / Tập trung (6 bài) =======
+  ('40000000-0000-0000-0000-000000000011',
+   'Rừng xanh buổi sáng — Ambient nature',
+   'music',
+   'Âm thanh thiên nhiên buổi sáng: chim hót, gió nhẹ, suối chảy — giúp tinh thần thư thái và tập trung làm việc.',
+   'https://images.unsplash.com/photo-1448375240586-882707db888b?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+   'calm', 35, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '46 days', now()),
+
+  ('40000000-0000-0000-0000-000000000012',
+   'Deep Focus — Lo-fi beats for study',
+   'music',
+   'Nhạc lo-fi tiết tấu chậm, không lời — tối ưu cho việc học tập, đọc sách và làm việc sáng tạo.',
+   'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+   'calm', 50, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '44 days', now()),
+
+  ('40000000-0000-0000-0000-000000000013',
+   'Thiền định — Âm thanh bát đồng Tây Tạng',
+   'music',
+   'Tiếng bát đồng cộng hưởng tần số 432Hz, giúp tâm trí tĩnh lặng và thư giãn sâu khi thiền định.',
+   'https://images.unsplash.com/photo-1508672019048-805c876b67e2?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+   'calm', 20, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '43 days', now()),
+
+  ('40000000-0000-0000-0000-000000000014',
+   'Mưa đêm bên cửa sổ — Rainy ambience',
+   'music',
+   'Tiếng mưa nhẹ kèm nhạc nền ambient tối giản, phù hợp để thư giãn và giảm căng thẳng buổi tối.',
+   'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
+   'calm', 40, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '42 days', now()),
+
+  ('40000000-0000-0000-0000-000000000029',
+   'Anti-Anxiety — 528Hz Healing Frequency',
+   'music',
+   'Âm thanh tần số 528Hz được cho là có tác dụng giảm cortisol, giúp giảm lo âu và phục hồi cân bằng cảm xúc.',
+   'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3',
+   'calm', 30, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '27 days', now()),
+
+  ('40000000-0000-0000-0000-000000000030',
+   'Stress Relief — Gentle Harp and Flute',
+   'music',
+   'Hòa âm đàn harp và sáo nhẹ nhàng, giai điệu chậm rãi giúp hạ nhịp tim và giảm mức độ căng thẳng hiệu quả.',
+   'https://images.unsplash.com/photo-1446071103084-c257b5f70672?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3',
+   'calm', 25, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '26 days', now()),
+
+  -- ======= SLEEP - Giúp ngủ ngon (3 bài) =======
+  ('40000000-0000-0000-0000-000000000015',
+   'Guitar acoustic ru ngủ',
+   'music',
+   'Giai điệu guitar acoustic nhẹ nhàng, chậm rãi — lý tưởng để thư giãn và chìm vào giấc ngủ sau một ngày dài.',
+   'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
+   'sleep', 55, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '41 days', now()),
+
+  ('40000000-0000-0000-0000-000000000016',
+   'White Noise — Tiếng gió và tĩnh lặng',
+   'music',
+   'White noise tần số trung tính giúp che tiếng ồn môi trường, hỗ trợ ngủ sâu và không bị giật mình.',
+   'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
+   'sleep', 60, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '40 days', now()),
+
+  ('40000000-0000-0000-0000-000000000017',
+   'Cello and Strings — Bản nhạc cổ điển ru ngủ',
+   'music',
+   'Tuyển tập cello và đàn dây cổ điển nhịp độ adagio, giúp hạ nhiệt cơ thể và não bộ trước giờ ngủ.',
+   'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
+   'sleep', 45, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '39 days', now()),
+
+  -- ======= HAPPY - Vui vẻ / Tích cực (4 bài) =======
+  ('40000000-0000-0000-0000-000000000018',
+   'Good Morning Sunshine — Acoustic pop',
+   'music',
+   'Nhạc acoustic pop sáng sủa, giai điệu vui tươi giúp bạn bắt đầu ngày mới với tâm trạng phấn chấn và tích cực.',
+   'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3',
+   'happy', 30, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '38 days', now()),
+
+  ('40000000-0000-0000-0000-000000000019',
+   'Jazz Cafe Sáng — Upbeat instrumental',
+   'music',
+   'Nhạc jazz café nhịp điệu vừa phải, sống động và ấm áp — phù hợp khi bạn muốn duy trì cảm xúc vui vẻ và năng động.',
+   'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
+   'happy', 40, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '37 days', now()),
+
+  ('40000000-0000-0000-0000-000000000020',
+   'Feel Good — Indie feel-good playlist',
+   'music',
+   'Tuyển chọn nhạc indie nhẹ nhàng, ca từ truyền cảm hứng và giai điệu dễ nghe — nâng cao tinh thần khi bạn cần động lực.',
+   'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3',
+   'happy', 35, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '36 days', now()),
+
+  ('40000000-0000-0000-0000-000000000021',
+   'Ukulele Vui — Những điều nhỏ bé hạnh phúc',
+   'music',
+   'Tiếng ukulele trong trẻo, vui tươi gợi lên những khoảnh khắc đơn giản và hạnh phúc trong cuộc sống hàng ngày.',
+   'https://images.unsplash.com/photo-1499364615650-ec38552f4f34?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3',
+   'happy', 25, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '35 days', now()),
+
+  -- ======= SAD - Đồng hành khi buồn (3 bài) =======
+  ('40000000-0000-0000-0000-000000000022',
+   'Nỗi Buồn Đẹp — Sad piano solo',
+   'music',
+   'Piano solo chậm rãi, mang giai điệu buồn nhẹ — giúp bạn chấp nhận và xử lý cảm xúc buồn bã một cách lành mạnh.',
+   'https://images.unsplash.com/photo-1493836512294-502baa1986e2?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
+   'sad', 28, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '34 days', now()),
+
+  ('40000000-0000-0000-0000-000000000023',
+   'Mong Manh — Nhạc cụ thể thương',
+   'music',
+   'Bản nhạc hòa tấu cello và violin mang âm điệu sâu lắng, phù hợp để ngồi yên với cảm xúc và tìm lại sự bình yên bên trong.',
+   'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+   'sad', 32, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '33 days', now()),
+
+  ('40000000-0000-0000-0000-000000000024',
+   'Mưa và Ký Ức — Ambient melancholy',
+   'music',
+   'Nhạc ambient nhẹ nhàng với tiếng mưa và piano, tạo không gian an toàn để bạn nghỉ ngơi cùng cảm xúc của mình.',
+   'https://images.unsplash.com/photo-1501426026826-31c667bdf23d?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+   'sad', 38, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '32 days', now()),
+
+  -- ======= ENERGY - Tăng năng lượng / Vận động (4 bài) =======
+  ('40000000-0000-0000-0000-000000000025',
+   'Morning Run — Upbeat workout beats',
+   'music',
+   'Nhạc EDM nhịp độ nhanh 128BPM, hoàn hảo cho buổi chạy bộ sáng hoặc bài tập cardio để bắt đầu ngày mới đầy năng lượng.',
+   'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+   'energy', 45, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '31 days', now()),
+
+  ('40000000-0000-0000-0000-000000000026',
+   'Power Hour — Motivation mix',
+   'music',
+   'Bản mix nhạc điện tử sôi động kết hợp elements hip-hop, giúp bạn tập trung và duy trì hiệu suất cao trong công việc.',
+   'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+   'energy', 60, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '30 days', now()),
+
+  ('40000000-0000-0000-0000-000000000027',
+   'Pump It Up — Gym and Cardio playlist',
+   'music',
+   'Tuyển tập nhạc thể dục nhịp độ cao, tempo 140BPM — lý tưởng cho gym, zumba hoặc bất kỳ hoạt động thể chất cường độ cao nào.',
+   'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+   'energy', 50, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '29 days', now()),
+
+  ('40000000-0000-0000-0000-000000000028',
+   'Overcome — Nhạc truyền cảm hứng',
+   'music',
+   'Nhạc orchestral hùng tráng kết hợp beat điện tử — khơi dậy ý chí mạnh mẽ, giúp bạn vượt qua thử thách và tin vào bản thân.',
+   'https://images.unsplash.com/photo-1533294455009-a77b7557d2d1?w=400',
+   'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+   'energy', 35, true, 'b0000000-0000-0000-0000-000000000006', now() - interval '28 days', now())
+
+ON CONFLICT (id) DO NOTHING;
