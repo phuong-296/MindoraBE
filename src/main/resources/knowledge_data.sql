@@ -114,7 +114,112 @@ INSERT INTO knowledge_documents (id, title, content, source, chunk_index, create
 ('d0000000-0000-0000-0000-000000000020',
  'Xây dựng mạng lưới hỗ trợ xã hội',
  'Mối quan hệ xã hội là yếu tố bảo vệ sức khỏe tâm thần mạnh nhất được biết đến. Nghiên cứu Harvard Grant Study (80 năm theo dõi) kết luận: Chất lượng mối quan hệ - không phải tiền bạc, danh vọng, hay thể chất - là yếu tố dự đoán tốt nhất về hạnh phúc và sức khỏe lâu dài. Cô đơn làm tăng nguy cơ trầm cảm gấp 3 lần và tương đương hút 15 điếu thuốc mỗi ngày về tác hại sức khỏe (Holt-Lunstad, 2015). Xây dựng kết nối: Ưu tiên thời gian face-to-face với người thân. Tham gia nhóm có cùng sở thích. Tình nguyện phục vụ cộng đồng. Đừng chờ cảm xúc tốt mới kết nối - hãy hành động trước.',
- 'Harvard Study of Adult Development', 1, now())
+ 'Harvard Study of Adult Development', 1, now()),
+
+-- ── PANIC ATTACK / HOẢNG LOẠN CẤP TÍNH ──────────────────────────────────────
+('d0000000-0000-0000-0000-000000000021',
+ 'Kỹ thuật kiểm soát cơn hoảng loạn (Panic Attack)',
+ 'Cơn hoảng loạn (panic attack) là sự gia tăng đột ngột của nỗi sợ hãi tột cùng kèm theo các triệu chứng thể chất như tim đập nhanh, nghẹn thở, chóng mặt. Cách ứng phó nhanh: 1. Thừa nhận cơn hoảng loạn: Tự nhủ "Đây chỉ là phản ứng sinh lý tạm thời, nó sẽ qua trong 10-15 phút và mình vẫn an toàn". 2. Thở chậm bằng bụng: Hít vào bằng mũi 4 giây, giữ 2 giây, thở ra bằng miệng 6 giây để kích hoạt hệ phó giao cảm. 3. Tập trung vào một điểm cố định trước mặt hoặc ôm lấy cơ thể để tạo cảm giác vững chãi. Tránh cố gắng chạy trốn hay chống cự, hãy thả lỏng và cho phép cơn sóng cảm xúc đi qua.',
+ 'CBT - Panic Management', 1, now()),
+
+-- ── RELATIONSHIP STRESS / MỐI QUAN HỆ ────────────────────────────────────────
+('d0000000-0000-0000-0000-000000000022',
+ 'Xử lý căng thẳng và giao tiếp trong mối quan hệ',
+ 'Mâu thuẫn và căng thẳng trong các mối quan hệ (gia đình, tình cảm, bạn bè) thường bắt nguồn từ giao tiếp thiếu hiệu quả. Liệu pháp nhận thức - hành vi (CBT) khuyên dùng kỹ thuật giao tiếp "Tôi" (I-messages) thay vì "Bạn" (You-messages) để tránh gây phòng thủ cho đối phương. Cú pháp: "Tôi cảm thấy [cảm xúc] khi [sự việc xảy ra], vì [lý do], tôi mong muốn [đề xuất cụ thể]". Ví dụ: Thay vì nói "Bạn lúc nào cũng bỏ bê tôi", hãy nói "Tôi cảm thấy tủi thân khi bạn không nhắn tin lúc đi làm về muộn, tôi hy vọng chúng ta có thể nhắn cho nhau một câu để an tâm". Phương pháp này giúp tập trung vào việc giải quyết nhu cầu hơn là đổ lỗi.',
+ 'CBT - Relationship Psychology', 1, now()),
+
+-- ── ASSERTIVENESS / TỪ CHỐI LÀNH MẠNH ────────────────────────────────────────
+('d0000000-0000-0000-0000-000000000023',
+ 'Kỹ năng từ chối lành mạnh và thiết lập ranh giới',
+ 'Thiết lập ranh giới cá nhân (boundaries) là nền tảng để bảo vệ sức khỏe tâm thần. Nhiều người rơi vào trạng thái burnout và căng thẳng do không biết cách từ chối (people-pleasing). Các bước thiết lập ranh giới lành mạnh: 1. Nhận diện nhu cầu và giới hạn của bản thân. 2. Nói "Không" một cách lịch sự nhưng dứt khoát, không cần viện cớ quá nhiều hay xin lỗi thái quá. Ví dụ: "Tôi hiểu công việc này quan trọng, nhưng lịch làm việc tuần này của tôi đã kín nên tôi không thể nhận thêm". 3. Chấp nhận sự không thoải mái ban đầu của người khác và tự nhắc nhở bản thân rằng từ chối công việc không có nghĩa là từ chối con người họ.',
+ 'Assertiveness Training - CBT', 1, now()),
+
+-- ── COGNITIVE REFRAMING / TÁI CẤU TRÚC NHẬN THỨC ──────────────────────────────
+('d0000000-0000-0000-0000-000000000024',
+ 'Kỹ thuật tái cấu trúc nhận thức (Cognitive Reframing)',
+ 'Tái cấu trúc nhận thức (Cognitive Reframing) là cốt lõi của liệu pháp CBT, giúp thay đổi cách chúng ta nhìn nhận các tình huống tiêu cực để giảm bớt đau khổ. Quy trình thực hiện: 1. Xác định suy nghĩ tự động tiêu cực (ví dụ: "Mình làm hỏng bài thuyết trình này rồi, mình là kẻ thất bại hoàn toàn"). 2. Tìm kiếm bằng chứng khách quan ủng hộ và phản đối suy nghĩ đó. 3. Viết lại một suy nghĩ cân bằng, thực tế hơn (ví dụ: "Bài thuyết trình có một số chỗ chưa tốt, nhưng mình đã hoàn thành và chuẩn bị kỹ lưỡng. Đây là cơ hội để mình rút kinh nghiệm lần sau, nó không quyết định giá trị con người mình"). Kỹ thuật này giúp phá vỡ các bẫy tư duy tiêu cực.',
+ 'CBT - Cognitive Restructuring', 1, now()),
+
+-- ── PROCRASTINATION / TRÌ HOÃN DO TÂM LÝ ─────────────────────────────────────
+('d0000000-0000-0000-0000-000000000025',
+ 'Vượt qua trì hoãn do tâm lý sợ thất bại',
+ 'Trì hoãn (procrastination) thường không phải do lười biếng mà là một cơ chế phòng vệ cảm xúc trước nỗi lo sợ thất bại, sự phán xét hoặc áp lực hoàn hảo. Để vượt qua: 1. Áp dụng "quy tắc 5 phút": Cam kết chỉ làm việc đó trong đúng 5 phút. Khi đã bắt đầu, rào cản tâm lý sẽ giảm và bạn dễ tiếp tục hơn. 2. Chia nhỏ mục tiêu cực đại thành các nhiệm vụ siêu nhỏ có thể hoàn thành trong 15-30 phút (kỹ thuật Pomodoro). 3. Thực hành tự trắc ẩn (self-compassion): Tha thứ cho những lần trì hoãn trước đó, vì tự trách móc chỉ làm tăng căng thẳng và dẫn đến trì hoãn tiếp theo. Hãy tập trung vào hành động tiến bước thay vì sự hoàn hảo.',
+ 'CBT - Procrastination Management', 1, now()),
+
+('d0000000-0000-0000-0000-000000000026',
+ 'Liệu pháp nhận thức hành vi cho chứng mất ngủ (CBT-I)',
+ 'CBT-I (Cognitive Behavioral Therapy for Insomnia) là liệu pháp đầu tay điều trị mất ngủ mãn tính mà không dùng thuốc. Kỹ thuật cốt lõi: 1. Kiểm soát kích thích: Chỉ lên giường khi buồn ngủ; không xem điện thoại, đọc sách hoặc làm việc trên giường. Nếu sau 20 phút không ngủ được, hãy rời giường sang phòng khác làm việc nhẹ nhàng. 2. Hạn chế thời gian ngủ: Chỉ nằm trên giường đúng số giờ thực tế bạn có thể ngủ, tránh nằm trằn trọc làm tăng lo âu về giấc ngủ. 3. Vệ sinh giấc ngủ: Tránh caffeine sau 14h, tắt màn hình xanh trước ngủ 1 tiếng. Kỹ thuật này giúp não bộ tái thiết lập mối liên kết mạnh mẽ giữa chiếc giường và giấc ngủ ngon.',
+ 'CBT-I Sleep Academy', 1, now()),
+
+('d0000000-0000-0000-0000-000000000027',
+ 'Vượt qua Hội chứng kẻ giả mạo (Impostor Syndrome)',
+ 'Hội chứng kẻ giả mạo là trạng thái tâm lý nghi ngờ khả năng của bản thân và luôn sợ bị người khác "phát hiện" mình là kẻ lừa dối, dù bạn có đầy đủ năng lực và thành tựu. Cách ứng phó: 1. Ghi nhận và đặt tên cảm xúc: Nhận diện rằng "Đây chỉ là suy nghĩ của hội chứng kẻ giả mạo, không phải sự thật". 2. Ghi chép nhật ký thành tích: Lưu lại những phản hồi tích cực, bằng chứng thực tế về năng lực của mình. 3. Thực hành tự trắc ẩn (self-compassion): Chấp nhận rằng ai cũng có sai sót và việc không biết mọi thứ là bình thường. Chia sẻ với đồng nghiệp đáng tin cậy cũng giúp bạn nhận ra nhiều người cũng có cảm giác giống bạn.',
+ 'Clinical Psychology - Impostor Syndrome', 1, now()),
+
+('d0000000-0000-0000-0000-000000000028',
+ 'Kỹ thuật Time-out để kiểm soát cơn giận dữ',
+ 'Time-out (tạm ngắt) là công cụ kiểm soát cơn giận hiệu quả khi mâu thuẫn giao tiếp leo thang. Khi cảm thấy các dấu hiệu sinh lý của cơn giận (tim đập nhanh, thở gấp, cơ bắp căng thẳng): 1. Chủ động đề xuất tạm dừng: Nói rõ ràng với đối phương bằng giọng bình tĩnh: "Tôi đang cảm thấy nóng giận và không thể thảo luận tiếp một cách khách quan. Tôi cần 20 phút để bình tĩnh lại, sau đó mình sẽ nói tiếp". 2. Rời khỏi không gian tranh chấp: Đi bộ chậm, uống nước mát hoặc hít thở sâu bụng. 3. Không suy nghĩ kích động thêm: Tránh lặp đi lặp lại những suy nghĩ đổ lỗi trong đầu trong thời gian tạm ngắt để prefrontal cortex có đủ thời gian bình tĩnh lại.',
+ 'Anger Management - CBT', 1, now()),
+
+('d0000000-0000-0000-0000-000000000029',
+ 'Giải tỏa sự cô đơn và xây dựng kết nối sâu sắc',
+ 'Cô đơn kéo dài gây hại cho sức khỏe tương đương hút thuốc và làm tăng nguy cơ trầm cảm. Để vượt qua cô đơn: 1. Thay đổi nhận thức: Cô đơn là một tín hiệu cảm xúc nhắc nhở ta cần kết nối xã hội, giống như đói nhắc ta ăn, không phải là một khiếm khuyết của bản thân. 2. Bắt đầu từ những tương tác nhỏ: Chào hỏi người hàng xóm, mỉm cười với nhân viên phục vụ để kích hoạt hormone oxytocin. 3. Tham gia các cộng đồng có cùng sở thích (câu lạc bộ sách, thiện nguyện, thể thao) để tạo cơ hội gặp gỡ tự nhiên. 4. Tập trung vào chất lượng hơn số lượng: Chỉ cần 1-2 mối quan hệ sâu sắc, sẵn sàng lắng nghe và chia sẻ là đủ để bảo vệ bạn khỏi cảm giác cô đơn.',
+ 'Harvard Loneliness Study', 1, now()),
+
+('d0000000-0000-0000-0000-000000000030',
+ 'Kỹ thuật thiền quét cơ thể (Body Scan Meditation)',
+ 'Thiền quét cơ thể (Body Scan) là bài thực hành chánh niệm giúp giải tỏa căng thẳng thể chất và tinh thần cực kỳ hiệu quả, kết nối lại tâm trí và cơ thể. Cách thực hiện: 1. Nằm hoặc ngồi ở tư thế thoải mái nhất, nhắm mắt lại và thở tự nhiên. 2. Di chuyển sự chú ý của bạn chầm chậm qua từng vùng của cơ thể, bắt đầu từ ngón chân, bàn chân, cổ chân, bắp chân... đi dần lên đỉnh đầu. 3. Tại mỗi vùng, hãy cảm nhận các cảm giác sinh lý (nóng, lạnh, căng, đau, hoặc không có cảm giác gì) mà không phán xét. 4. Thở vào vùng đó và tưởng tượng hơi thở giúp giải phóng sự căng thẳng tích tụ. Thực hành 10-15 phút mỗi tối trước khi ngủ giúp cải thiện chất lượng giấc ngủ rõ rệt.',
+ 'MBSR - Kabat-Zinn Program', 1, now()),
+
+('d0000000-0000-0000-0000-000000000031',
+ 'Liệu pháp Chấp nhận và Cam kết (ACT) cho lo âu',
+ 'Liệu pháp ACT (Acceptance and Commitment Therapy) tiếp cận lo âu bằng cách thay đổi mối quan hệ của bạn với lo âu thay vì cố gắng loại bỏ nó. Các nguyên lý chính: 1. Chấp nhận (Acceptance): Cho phép lo âu tồn tại như một cảm xúc tự nhiên của con người, ngưng chiến đấu chống lại nó. Tự nhủ "Tôi đang lo lắng, và cảm giác này không dễ chịu nhưng tôi có thể chịu đựng được". 2. Tách biệt nhận thức (Defusion): Xem suy nghĩ chỉ là ngôn từ, không phải sự thật tuyệt đối. Ví dụ: Thay vì nghĩ "Tôi sẽ thất bại", hãy nói "Tôi đang có suy nghĩ rằng mình sẽ thất bại". 3. Hành động theo giá trị sống (Committed Action): Dù lo âu có hiện diện, bạn vẫn cam kết hành động hướng tới những gì quan trọng nhất với cuộc sống của mình.',
+ 'ACT - Hayes Acceptance Therapy', 1, now()),
+
+('d0000000-0000-0000-0000-000000000032',
+ 'Vượt qua nỗi đau buồn và mất mát (Grief & Loss)',
+ 'Mô hình Kübler-Ross mô tả 5 giai đoạn cảm xúc khi trải qua sự mất mát lớn (người thân qua đời, chia tay, mất việc): 1. Phủ nhận (Denial): Tránh né sự thật. 2. Giận dữ (Anger): Tự hỏi tại sao chuyện này lại xảy ra với mình. 3. Thương lượng (Bargaining): Cố gắng thay đổi thực tại bằng các giả định "nếu như". 4. Trầm cảm (Depression): Đối mặt với nỗi buồn sâu sắc. 5. Chấp nhận (Acceptance): Học cách sống chung với thực tại mới. Lưu ý: Các giai đoạn này không diễn ra theo trình tự tuyến tính mà có thể đảo lộn. Để vượt qua, hãy cho phép bản thân được khóc, được đau buồn và tìm kiếm sự nâng đỡ từ người thân hoặc chuyên gia tâm lý.',
+ 'Kübler-Ross Grief Model', 1, now()),
+
+('d0000000-0000-0000-0000-000000000033',
+ 'Quản lý căng thẳng tài chính và lo âu cuộc sống',
+ 'Căng thẳng tài chính là nguồn cơn phổ biến dẫn đến rối loạn lo âu và trầm cảm. Các bước ứng phó tâm lý: 1. Đối mặt thực tế: Tránh né nhìn vào số dư tài khoản chỉ làm tăng lo âu mơ hồ. Hãy lập một bảng chi tiêu rõ ràng để kiểm soát. 2. Tách biệt giá trị bản thân khỏi tình hình tài chính: Sự giàu có hay nghèo khó tạm thời không quyết định giá trị hay đạo đức con người bạn. 3. Tập trung vào những thứ có thể kiểm soát: Bạn không thể kiểm soát nền kinh tế, nhưng bạn kiểm soát được chi tiêu cá nhân và việc tìm kiếm cơ hội mới. 4. Thực hành self-care giá rẻ: Tập thể dục ngoài trời, đọc sách thư viện, kết nối với bạn bè là những hoạt động miễn phí giúp duy trì năng lượng tinh thần.',
+ 'Financial Psychology & Wellbeing', 1, now()),
+
+('d0000000-0000-0000-0000-000000000034',
+ 'Kỹ thuật thư giãn cơ bắp tiến triển (PMR)',
+ 'Thư giãn cơ bắp tiến triển (Progressive Muscle Relaxation - PMR) được chứng minh giúp làm giảm lo âu và stress bằng cách giải phóng căng thẳng thể lý tích tụ trong cơ. Cách thực hiện: 1. Ngồi hoặc nằm thoải mái. 2. Bắt đầu từ nhóm cơ đầu tiên (ví dụ bàn tay): Gồng chặt cơ tay hết mức trong 5 giây, cảm nhận sự căng tức. 3. Thả lỏng đột ngột hoàn toàn, thở ra và cảm nhận sự thư giãn lan tỏa trong cơ bắp trong 15 giây. 4. Di chuyển tiếp tục qua các nhóm cơ khác: bắp tay, vai, mặt, ngực, bụng, đùi, bàn chân. Kỹ thuật này giúp bạn nhạy bén hơn trong việc nhận biết và chủ động thả lỏng khi cơ thể bắt đầu căng thẳng vì lo âu.',
+ 'PMR - Jacobson Relaxation Technique', 1, now()),
+
+('d0000000-0000-0000-0000-000000000035',
+ 'Đối phó với rối loạn trầm cảm theo mùa (SAD)',
+ 'Trầm cảm theo mùa (Seasonal Affective Disorder - SAD) là một dạng trầm cảm xuất hiện vào một thời điểm nhất định trong năm, phổ biến nhất là mùa đông khi ánh sáng mặt trời giảm đi làm xáo trộn nhịp sinh học và giảm lượng serotonin, melatonin của cơ thể. Cách ứng phó: 1. Liệu pháp ánh sáng: Tiếp xúc với ánh sáng tự nhiên ít nhất 20-30 phút vào buổi sáng hoặc dùng đèn giả lập ánh sáng mặt trời (light therapy box). 2. Kích hoạt hành vi: Lên kế hoạch vận động ngoài trời, đi bộ nhanh. 3. Bổ sung Vitamin D dưới sự hướng dẫn y tế và duy trì kết nối xã hội đều đặn để tránh xu hướng thu mình lại trong những ngày thời tiết u ám.',
+ 'WHO - Seasonal Depression Guidelines', 1, now()),
+
+('d0000000-0000-0000-0000-000000000036',
+ 'Chữa lành tổn thương tâm lý quá khứ (Trauma & Resilience)',
+ 'Chữa lành tổn thương (trauma) từ quá khứ là một hành trình dài đòi hỏi sự kiên nhẫn và tự trắc ẩn. Tổn thương làm thay đổi cách hệ thần kinh phản ứng với các mối đe dọa, khiến bạn dễ rơi vào trạng thái cảnh giác quá mức hoặc tê liệt cảm xúc. Các bước xây dựng khả năng phục hồi (resilience): 1. Tạo sự an toàn: Xây dựng một không gian sống yên bình và thiết lập thói quen sinh hoạt ổn định. 2. Nhận diện các tác nhân kích thích (triggers) gợi lại ký ức cũ. 3. Thực hành tiếp đất (grounding) khi ký ức tràn về để nhắc nhở bản thân rằng bạn đang ở hiện tại và an toàn. 4. Đừng cố gắng tự giải quyết nếu tổn thương quá sâu, hãy tìm sự đồng hành từ nhà trị liệu tâm lý chuyên nghiệp.',
+ 'Trauma Recovery & Resilience Studies', 1, now()),
+
+('d0000000-0000-0000-0000-000000000037',
+ 'Cân bằng giữa công việc và cuộc sống (Work-life balance)',
+ 'Thiếu cân bằng giữa công việc và cuộc sống riêng tư là nguyên nhân hàng đầu dẫn đến kiệt sức nghề nghiệp (burnout). Để thiết lập lại sự cân bằng: 1. Đặt ranh giới công nghệ: Tắt thông báo email và ứng dụng làm việc sau 19h tối. 2. Lập kế hoạch cho thời gian cá nhân: Coi thời gian dành cho gia đình, sở thích, hoặc nghỉ ngơi có giá trị tương đương một cuộc họp quan trọng của đối tác và không tự ý hủy bỏ. 3. Thực hành chánh niệm vi mô: Dành ra 3 phút giữa các ca làm việc để nhắm mắt hít thở sâu, reset lại tâm trí. 4. Nhận ra rằng năng suất làm việc của bạn phụ thuộc trực tiếp vào mức độ hồi phục năng lượng tinh thần sau giờ làm.',
+ 'Burnout Prevention - WHO', 1, now()),
+
+('d0000000-0000-0000-0000-000000000038',
+ 'Vượt qua chứng lo âu xã hội (Social Anxiety)',
+ 'Lo âu xã hội (social anxiety) là nỗi sợ hãi kéo dài và dữ dội về việc bị người khác quan sát, phán xét hoặc làm bẽ mặt trong các tình huống xã hội. Cách ứng phó dựa trên CBT: 1. Nhận diện các bẫy suy nghĩ: Ví dụ bẫy "đọc suy nghĩ người khác" ("Chắc chắn họ đang nghĩ mình trông thật ngớ ngẩn"). 2. Chuyển hướng sự chú ý: Thay vì tập trung cao độ vào những lo lắng nội tâm hay biểu hiện của cơ thể (đổ mồ hôi, run giọng), hãy hướng sự tập trung ra bên ngoài, chú ý lắng nghe lời đối phương nói hoặc quan sát cảnh vật xung quanh. 3. Tiếp xúc dần dần (exposure): Bắt đầu từ những tương tác nhỏ nhất như hỏi đường người lạ, sau đó tăng dần độ khó để não bộ nhận ra tình huống xã hội không nguy hiểm như tưởng tượng.',
+ 'CBT - Social Anxiety Protocol', 1, now()),
+
+('d0000000-0000-0000-0000-000000000039',
+ 'Nhận biết và ứng phó mối quan hệ độc hại',
+ 'Mối quan hệ độc hại (toxic relationship) là mối quan hệ khiến bạn cảm thấy kiệt quệ cảm xúc, bị thao túng, kiểm soát hoặc thiếu tôn trọng kéo dài. Các dấu hiệu nhận biết: 1. Thao túng tâm lý (gaslighting) khiến bạn nghi ngờ trí nhớ và nhận thức của chính mình. 2. Kiểm soát quá mức: Đối phương kiểm soát các mối quan hệ, tài chính hoặc cách ăn mặc của bạn. 3. Giao tiếp đổ lỗi, chỉ trích liên tục. Cách ứng phó: 1. Thừa nhận thực tế mà không tự đổ lỗi cho bản thân. 2. Thiết lập ranh giới cứng: Nói rõ những hành vi bạn không chấp nhận. 3. Xây dựng mạng lưới hỗ trợ xung quanh (bạn bè, gia đình, chuyên gia) và sẵn sàng chấm dứt mối quan hệ để bảo vệ sức khỏe tâm thần của mình.',
+ 'Relationship Psychology Guidelines', 1, now()),
+
+('d0000000-0000-0000-0000-000000000040',
+ 'Nuôi dưỡng lòng tự tôn (Self-esteem) lành mạnh',
+ 'Lòng tự tôn (self-esteem) lành mạnh là sự trân trọng và đánh giá tích cực về giá trị bản thân. Thiếu lòng tự tôn dẫn đến sự tự ti, nhạy cảm quá mức trước lời phê bình và xu hướng làm hài lòng người khác (people-pleasing). Cách nuôi dưỡng: 1. Ngừng so sánh xã hội: Hạn chế lướt mạng xã hội khi đang cảm thấy tồi tệ; so sánh cuộc sống thực tế của bạn với "cuộc sống hoàn hảo đã qua chỉnh sửa" của người khác là không công bằng. 2. Thay đổi tự thoại (self-talk): Thay thế những lời chỉ trích bản thân bằng những lời động viên nhẹ nhàng. 3. Chấp nhận bản thân vô điều kiện: Nhận thức rằng giá trị của bạn là cố định, không phụ thuộc vào thành công hay thất bại tạm thời. 4. Đặt ra và hoàn thành những mục tiêu nhỏ hàng ngày để bồi đắp cảm giác tự chủ.',
+ 'Self-Esteem Research - CBT', 1, now())
 
 ON CONFLICT (id) DO NOTHING;
 
@@ -162,7 +267,61 @@ INSERT INTO knowledge_document_tags (document_id, tag) VALUES
 ('d0000000-0000-0000-0000-000000000019', 'neutral'),
 ('d0000000-0000-0000-0000-000000000019', 'tired'),
 ('d0000000-0000-0000-0000-000000000020', 'neutral'),
-('d0000000-0000-0000-0000-000000000020', 'sad')
+('d0000000-0000-0000-0000-000000000020', 'sad'),
+('d0000000-0000-0000-0000-000000000021', 'anxious'),
+('d0000000-0000-0000-0000-000000000021', 'stressed'),
+('d0000000-0000-0000-0000-000000000022', 'stressed'),
+('d0000000-0000-0000-0000-000000000022', 'angry'),
+('d0000000-0000-0000-0000-000000000022', 'sad'),
+('d0000000-0000-0000-0000-000000000022', 'neutral'),
+('d0000000-0000-0000-0000-000000000023', 'tired'),
+('d0000000-0000-0000-0000-000000000023', 'stressed'),
+('d0000000-0000-0000-0000-000000000023', 'neutral'),
+('d0000000-0000-0000-0000-000000000024', 'sad'),
+('d0000000-0000-0000-0000-000000000024', 'anxious'),
+('d0000000-0000-0000-0000-000000000024', 'stressed'),
+('d0000000-0000-0000-0000-000000000024', 'neutral'),
+('d0000000-0000-0000-0000-000000000025', 'tired'),
+('d0000000-0000-0000-0000-000000000025', 'stressed'),
+('d0000000-0000-0000-0000-000000000025', 'neutral'),
+('d0000000-0000-0000-0000-000000000026', 'tired'),
+('d0000000-0000-0000-0000-000000000026', 'stressed'),
+('d0000000-0000-0000-0000-000000000026', 'neutral'),
+('d0000000-0000-0000-0000-000000000027', 'anxious'),
+('d0000000-0000-0000-0000-000000000027', 'sad'),
+('d0000000-0000-0000-0000-000000000027', 'neutral'),
+('d0000000-0000-0000-0000-000000000028', 'angry'),
+('d0000000-0000-0000-0000-000000000028', 'stressed'),
+('d0000000-0000-0000-0000-000000000029', 'sad'),
+('d0000000-0000-0000-0000-000000000029', 'neutral'),
+('d0000000-0000-0000-0000-000000000030', 'tired'),
+('d0000000-0000-0000-0000-000000000030', 'stressed'),
+('d0000000-0000-0000-0000-000000000030', 'neutral'),
+('d0000000-0000-0000-0000-000000000031', 'anxious'),
+('d0000000-0000-0000-0000-000000000031', 'stressed'),
+('d0000000-0000-0000-0000-000000000032', 'sad'),
+('d0000000-0000-0000-0000-000000000032', 'anxious'),
+('d0000000-0000-0000-0000-000000000033', 'stressed'),
+('d0000000-0000-0000-0000-000000000033', 'anxious'),
+('d0000000-0000-0000-0000-000000000033', 'neutral'),
+('d0000000-0000-0000-0000-000000000034', 'anxious'),
+('d0000000-0000-0000-0000-000000000034', 'stressed'),
+('d0000000-0000-0000-0000-000000000034', 'neutral'),
+('d0000000-0000-0000-0000-000000000035', 'sad'),
+('d0000000-0000-0000-0000-000000000035', 'tired'),
+('d0000000-0000-0000-0000-000000000036', 'sad'),
+('d0000000-0000-0000-0000-000000000036', 'anxious'),
+('d0000000-0000-0000-0000-000000000036', 'stressed'),
+('d0000000-0000-0000-0000-000000000037', 'tired'),
+('d0000000-0000-0000-0000-000000000037', 'stressed'),
+('d0000000-0000-0000-0000-000000000037', 'neutral'),
+('d0000000-0000-0000-0000-000000000038', 'anxious'),
+('d0000000-0000-0000-0000-000000000038', 'stressed'),
+('d0000000-0000-0000-0000-000000000039', 'sad'),
+('d0000000-0000-0000-0000-000000000039', 'angry'),
+('d0000000-0000-0000-0000-000000000039', 'stressed'),
+('d0000000-0000-0000-0000-000000000040', 'sad'),
+('d0000000-0000-0000-0000-000000000040', 'neutral')
 ON CONFLICT DO NOTHING;
 
 -- ── Keywords ──────────────────────────────────────────────────────────────
@@ -186,5 +345,25 @@ INSERT INTO knowledge_document_keywords (document_id, keyword) VALUES
 ('d0000000-0000-0000-0000-000000000017', 'mindfulness'), ('d0000000-0000-0000-0000-000000000017', 'thiền'), ('d0000000-0000-0000-0000-000000000017', 'chánh niệm'),
 ('d0000000-0000-0000-0000-000000000018', 'bản thân'), ('d0000000-0000-0000-0000-000000000018', 'self-care'), ('d0000000-0000-0000-0000-000000000018', 'yêu thương'),
 ('d0000000-0000-0000-0000-000000000019', 'ngủ'), ('d0000000-0000-0000-0000-000000000019', 'giấc ngủ'), ('d0000000-0000-0000-0000-000000000019', 'mất ngủ'),
-('d0000000-0000-0000-0000-000000000020', 'bạn bè'), ('d0000000-0000-0000-0000-000000000020', 'cô đơn'), ('d0000000-0000-0000-0000-000000000020', 'kết nối')
+('d0000000-0000-0000-0000-000000000020', 'bạn bè'), ('d0000000-0000-0000-0000-000000000020', 'cô đơn'), ('d0000000-0000-0000-0000-000000000020', 'kết nối'),
+('d0000000-0000-0000-0000-000000000021', 'hoảng loạn'), ('d0000000-0000-0000-0000-000000000021', 'panic'), ('d0000000-0000-0000-0000-000000000021', 'cơn hoảng loạn'),
+('d0000000-0000-0000-0000-000000000022', 'mối quan hệ'), ('d0000000-0000-0000-0000-000000000022', 'giao tiếp'), ('d0000000-0000-0000-0000-000000000022', 'căng thẳng'),
+('d0000000-0000-0000-0000-000000000023', 'ranh giới'), ('d0000000-0000-0000-0000-000000000023', 'từ chối'), ('d0000000-0000-0000-0000-000000000023', 'burnout'),
+('d0000000-0000-0000-0000-000000000024', 'suy nghĩ'), ('d0000000-0000-0000-0000-000000000024', 'tư duy'), ('d0000000-0000-0000-0000-000000000024', 'reframing'),
+('d0000000-0000-0000-0000-000000000025', 'trì hoãn'), ('d0000000-0000-0000-0000-000000000025', 'pomodoro'), ('d0000000-0000-0000-0000-000000000025', 'sợ thất bại'),
+('d0000000-0000-0000-0000-000000000026', 'mất ngủ'), ('d0000000-0000-0000-0000-000000000026', 'insomnia'), ('d0000000-0000-0000-0000-000000000026', 'ngủ'),
+('d0000000-0000-0000-0000-000000000027', 'giả mạo'), ('d0000000-0000-0000-0000-000000000027', 'impostor'), ('d0000000-0000-0000-0000-000000000027', 'tự ti'),
+('d0000000-0000-0000-0000-000000000028', 'giận'), ('d0000000-0000-0000-0000-000000000028', 'time-out'), ('d0000000-0000-0000-0000-000000000028', 'tức giận'),
+('d0000000-0000-0000-0000-000000000029', 'cô đơn'), ('d0000000-0000-0000-0000-000000000029', 'kết nối'), ('d0000000-0000-0000-0000-000000000029', 'bạn bè'),
+('d0000000-0000-0000-0000-000000000030', 'quét cơ thể'), ('d0000000-0000-0000-0000-000000000030', 'body scan'), ('d0000000-0000-0000-0000-000000000030', 'thiền'),
+('d0000000-0000-0000-0000-000000000031', 'chấp nhận'), ('d0000000-0000-0000-0000-000000000031', 'act'), ('d0000000-0000-0000-0000-000000000031', 'lo âu'),
+('d0000000-0000-0000-0000-000000000032', 'đau buồn'), ('d0000000-0000-0000-0000-000000000032', 'grief'), ('d0000000-0000-0000-0000-000000000032', 'mất mát'),
+('d0000000-0000-0000-0000-000000000033', 'tài chính'), ('d0000000-0000-0000-0000-000000000033', 'tiền'), ('d0000000-0000-0000-0000-000000000033', 'lo âu'),
+('d0000000-0000-0000-0000-000000000034', 'thư giãn cơ'), ('d0000000-0000-0000-0000-000000000034', 'pmr'), ('d0000000-0000-0000-0000-000000000034', 'thả lỏng'),
+('d0000000-0000-0000-0000-000000000035', 'theo mùa'), ('d0000000-0000-0000-0000-000000000035', 'sad'), ('d0000000-0000-0000-0000-000000000035', 'mùa đông'),
+('d0000000-0000-0000-0000-000000000036', 'tổn thương'), ('d0000000-0000-0000-0000-000000000036', 'trauma'), ('d0000000-0000-0000-0000-000000000036', 'chữa lành'),
+('d0000000-0000-0000-0000-000000000037', 'cân bằng'), ('d0000000-0000-0000-0000-000000000037', 'làm việc'), ('d0000000-0000-0000-0000-000000000037', 'burnout'),
+('d0000000-0000-0000-0000-000000000038', 'xã hội'), ('d0000000-0000-0000-0000-000000000038', 'lo âu xã hội'), ('d0000000-0000-0000-0000-000000000038', 'giao tiếp'),
+('d0000000-0000-0000-0000-000000000039', 'độc hại'), ('d0000000-0000-0000-0000-000000000039', 'toxic'), ('d0000000-0000-0000-0000-000000000039', 'mối quan hệ'),
+('d0000000-0000-0000-0000-000000000040', 'tự tôn'), ('d0000000-0000-0000-0000-000000000040', 'giá trị'), ('d0000000-0000-0000-0000-000000000040', 'self-esteem')
 ON CONFLICT DO NOTHING;
