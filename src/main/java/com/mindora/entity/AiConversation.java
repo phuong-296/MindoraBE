@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "ai_conversations")
-public class AiConversation extends BaseEntity {
+public class AiConversation extends AuditableEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -32,10 +30,6 @@ public class AiConversation extends BaseEntity {
     // true = ẩn khỏi danh sách nhưng không xóa, giữ lại lịch sử
     @Column(name = "is_archived")
     private Boolean isArchived = false;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private Instant updatedAt;
 
     // Tin nhắn luôn được sắp xếp theo thứ tự thời gian tăng dần để hiển thị đúng luồng chat
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
