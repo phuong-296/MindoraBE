@@ -5,9 +5,9 @@ import com.mindora.dto.response.ChatResponse;
 import com.mindora.dto.response.ConversationResponse;
 import com.mindora.dto.response.MessageResponse;
 import com.mindora.dto.response.PageResponse;
+import com.mindora.entity.MessageRole;
 import com.mindora.security.UserPrincipal;
 import com.mindora.service.ConversationService;
-import com.mindora.service.EmotionAnalysisService;
 import com.mindora.service.RagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -26,9 +27,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ConversationController {
 
-    private final ConversationService    conversationService;
-    private final RagService             ragService;
-    private final EmotionAnalysisService emotionService;
+    private final ConversationService conversationService;
+    private final RagService          ragService;
 
     @GetMapping
     public ResponseEntity<List<ConversationResponse>> list(
@@ -90,21 +90,46 @@ public class ConversationController {
             return ResponseEntity.badRequest().build();
         }
 
-        // 1. Detect emotion từ tin nhắn
-        String emotion = emotionService.detectEmotion(content);
-
-        // 2. Lưu tin nhắn user
+        // 1. Lưu tin nhắn user — sendMessage tự detect emotion và lưu vào DB
         SendMessageRequest req = new SendMessageRequest();
         req.setRole("user");
         req.setContent(content);
         var userMsg = conversationService.sendMessage(principal.getId(), conversationId, req);
 
+        // 2. Emotion với context inheritance:
+        // Nếu turn hiện tại là neutral nhưng các turn trước có emotion nặng → kế thừa
+        String emotion = resolveEmotionWithContext(
+                userMsg.detectedEmotion(),
+                conversationService.getRecentMessages(principal.getId(), conversationId, 6));
+
         // 3. Chạy RAG pipeline → sinh phản hồi Dora
         ChatResponse rag = ragService.chat(
                 principal.getId(), conversationId, content, emotion);
 
-        // 4. Trả về cả tin nhắn user + phản hồi AI
+        // 4. Trả về cả tin nhắn user + phản hồi AI (kèm reply/mood/songs — xem RagServiceImpl)
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ChatResponse(userMsg, rag.getAiResponse(), rag.getRetrievedSources()));
+                .body(new ChatResponse(
+                        userMsg, rag.getAiResponse(), rag.getRetrievedSources(),
+                        rag.getReply(), rag.getMood(), rag.getSongs()));
+    }
+
+    /**
+     * Nếu emotion hiện tại là neutral, kiểm tra 3 tin nhắn user gần nhất.
+     * Nếu có emotion nặng liên tục → kế thừa để Dora không bị mất context.
+     * Crisis luôn được giữ nguyên từ detectEmotion.
+     */
+    private static final Set<String> STRONG_EMOTIONS = Set.of("anxious", "sad", "angry", "tired", "crisis");
+
+    private String resolveEmotionWithContext(String detected, List<MessageResponse> recentMessages) {
+        if (!"neutral".equals(detected)) return detected; // có emotion rõ → dùng luôn
+
+        // Lấy emotion từ 3 tin nhắn user gần nhất (bỏ qua AI messages)
+        return recentMessages.stream()
+                .filter(m -> "user".equals(m.role()))
+                .limit(3)
+                .map(MessageResponse::detectedEmotion)
+                .filter(e -> e != null && STRONG_EMOTIONS.contains(e))
+                .findFirst()         // emotion gần nhất
+                .orElse("neutral");  // không có gì → giữ neutral
     }
 }
