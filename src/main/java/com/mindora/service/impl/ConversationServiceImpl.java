@@ -10,8 +10,10 @@ import com.mindora.entity.Message;
 import com.mindora.entity.MessageRole;
 import com.mindora.exception.ResourceNotFoundException;
 import com.mindora.repository.AiConversationRepository;
+import com.mindora.repository.ContentLibraryRepository;
 import com.mindora.repository.MessageRepository;
 import com.mindora.repository.UserRepository;
+import com.mindora.util.SongMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +36,9 @@ public class ConversationServiceImpl implements ConversationService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
     private final EmotionAnalysisService emotionService;
+    private final ContentLibraryRepository contentRepository;
 
+    @Override
     @Transactional(readOnly = true)
     public List<ConversationResponse> listConversations(UUID userId) {
         // Chỉ trả về conversation chưa archive, sắp xếp mới nhất lên đầu
@@ -45,6 +49,7 @@ public class ConversationServiceImpl implements ConversationService {
                 .toList();
     }
 
+    @Override
     @Transactional
     public ConversationResponse createConversation(UUID userId, String title) {
         AiConversation conv = new AiConversation();
@@ -55,6 +60,7 @@ public class ConversationServiceImpl implements ConversationService {
         return toConversationResponse(conv);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Page<MessageResponse> getMessages(UUID userId, UUID conversationId, Pageable pageable) {
         requireOwnedConversation(userId, conversationId);
@@ -63,6 +69,19 @@ public class ConversationServiceImpl implements ConversationService {
                 .map(this::toMessageResponse);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<MessageResponse> getRecentMessages(UUID userId, UUID conversationId, int limit) {
+        requireOwnedConversation(userId, conversationId);
+        // findRecentMessages sắp xếp DESC (mới nhất trước) — đúng ý nghĩa "gần nhất",
+        // khác với getMessages() (ASC, dùng để hiển thị lịch sử theo trình tự thời gian).
+        return messageRepository
+                .findRecentMessages(conversationId, org.springframework.data.domain.PageRequest.of(0, limit))
+                .map(this::toMessageResponse)
+                .getContent();
+    }
+
+    @Override
     @Transactional
     public MessageResponse sendMessage(UUID userId, UUID conversationId, SendMessageRequest request) {
         AiConversation conv = requireOwnedConversation(userId, conversationId);
@@ -85,6 +104,7 @@ public class ConversationServiceImpl implements ConversationService {
         return toMessageResponse(message);
     }
 
+    @Override
     @Transactional
     public void clearMessages(UUID userId, UUID conversationId) {
         requireOwnedConversation(userId, conversationId);
@@ -113,6 +133,7 @@ public class ConversationServiceImpl implements ConversationService {
                 m.getContent(),
                 m.getDetectedEmotion(),
                 m.getSentimentScore(),
-                m.getCreatedAt());
+                m.getCreatedAt(),
+                SongMapper.resolve(m.getSongIds(), contentRepository));
     }
 }

@@ -41,6 +41,7 @@ public class JournalServiceImpl implements JournalService {
         "loved", "🥰", "happy", "😊", "neutral", "😐", "anxious", "😰", "sad", "😔", "angry", "😡"
     );
 
+    @Override
     @Transactional(readOnly = true)
     public Page<JournalResponse> list(UUID userId, Pageable pageable) {
         // Sắp xếp mới nhất lên đầu, hỗ trợ phân trang
@@ -48,6 +49,7 @@ public class JournalServiceImpl implements JournalService {
                 .map(this::toResponse);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public JournalResponse get(UUID userId, UUID id) {
         // findByIdAndUserId đảm bảo user chỉ đọc được nhật ký của mình
@@ -56,6 +58,7 @@ public class JournalServiceImpl implements JournalService {
         return toResponse(entry);
     }
 
+    @Override
     @Transactional
     public JournalResponse create(UUID userId, JournalRequest request) {
         JournalEntry entry = new JournalEntry();
@@ -74,6 +77,7 @@ public class JournalServiceImpl implements JournalService {
         return toResponse(entry);
     }
 
+    @Override
     @Transactional
     public JournalResponse update(UUID userId, UUID id, JournalRequest request) {
         JournalEntry entry = journalRepository.findByIdAndUserId(id, userId)
@@ -93,6 +97,7 @@ public class JournalServiceImpl implements JournalService {
         return toResponse(entry);
     }
 
+    @Override
     @Transactional
     public void delete(UUID userId, UUID id) {
         JournalEntry entry = journalRepository.findByIdAndUserId(id, userId)
