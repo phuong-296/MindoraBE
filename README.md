@@ -1,75 +1,292 @@
 # Mindora AI — Backend
 
-Spring Boot 3.3.4 · Java 17 · PostgreSQL · Spring Security + JWT. Backend cho ứng dụng đồng hành sức khỏe tâm thần Mindora AI.
+Spring Boot 3.3.4 · Java 21 · PostgreSQL · Spring Security + JWT · Gemini AI (RAG)
+
+Backend cho ứng dụng đồng hành sức khỏe tâm thần **Mindora AI**, bao gồm chatbot Dora, nhật ký cảm xúc, phân tích nguy cơ tâm lý, kết nối chuyên gia và thư viện nội dung chữa lành.
+
+---
 
 ## Yêu cầu
-- JDK 17+
-- Maven 3.9+ (hoặc dùng `./mvnw` nếu bạn thêm wrapper)
-- PostgreSQL 14+ đang chạy
 
-## Cấu hình
-Sửa `src/main/resources/application.properties`:
+| Công cụ | Phiên bản tối thiểu |
+|---|---|
+| JDK | 21 |
+| Maven | 3.9 |
+| PostgreSQL | 14 |
 
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/mindora_db
-spring.datasource.username=postgres
-spring.datasource.password=your_password
-app.jwt.secret=<chuỗi bí mật tối thiểu 32 ký tự>
-app.cors.allowed-origins=http://localhost:5173,http://localhost:5174
-```
+---
 
-Tạo database trước khi chạy:
+## Cài đặt & Chạy
+
+### 1. Tạo database
 
 ```sql
 CREATE DATABASE mindora_db;
 ```
 
-Bảng sẽ được Hibernate tự tạo (`ddl-auto=update`). Ba role (`USER`, `EXPERT`, `ADMIN`)
-được seed tự động qua `data.sql` khi khởi động (idempotent — chạy lại không bị trùng).
+### 2. Cấu hình `application.properties`
 
-## Chạy
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/mindora_db
+spring.datasource.username=postgres
+spring.datasource.password=<mật_khẩu_của_bạn>
+
+app.jwt.secret=<chuỗi_bí_mật_tối_thiểu_32_ký_tự>
+app.cors.allowed-origins=http://localhost:5173,http://localhost:5174
+
+# Gemini AI — lấy key miễn phí tại https://aistudio.google.com/apikey
+# Nếu bỏ trống, chatbot Dora vẫn hoạt động với fallback response từ knowledge base
+gemini.api.key=<api_key_của_bạn>
+```
+
+> **Lưu ý production:** Không commit credential vào Git. Dùng biến môi trường hoặc secrets manager.
+
+### 3. Chạy ứng dụng
 
 ```bash
 mvn spring-boot:run
-# hoặc
-mvn clean package && java -jar target/mindora-backend-1.0.0.jar
 ```
 
-Server chạy ở `http://localhost:8080`.
+hoặc build JAR:
 
-## Xác thực
-- `POST /api/auth/register` và `POST /api/auth/login` trả về `{ token, user, conversationId }`.
-- Các API khác cần header: `Authorization: Bearer <token>`.
+```bash
+mvn clean package
+java -jar target/mindora-backend-1.0.0.jar
+```
 
-## Nhóm endpoint chính
-| Prefix | Mô tả |
-|---|---|
-| `/api/auth/**` | Đăng ký / đăng nhập (public) |
-| `/api/users/me` | Thông tin & preferences của user |
-| `/api/conversations/**` | Chat AI: hội thoại + tin nhắn |
-| `/api/journals/**` | Nhật ký cảm xúc (CRUD) |
-| `/api/moods/**` | Ghi nhận & truy vấn tâm trạng |
-| `/api/contents/**` | Thư viện nội dung + lưu nội dung |
-| `/api/notifications/**` | Thông báo |
-| `/api/analysis/**` | Phân tích nguy cơ sức khỏe tâm thần |
-| `/api/experts/**` | Danh sách chuyên gia |
-| `/api/expert-connections/**` | Yêu cầu kết nối; `PATCH /{id}/status` chỉ cho ROLE_EXPERT |
+Server khởi động tại `http://localhost:8080`.
 
-## Kiến trúc tầng service
-- `com.mindora.service` chứa **interface** (`XxxService`).
-- `com.mindora.service.impl` chứa **class triển khai** (`XxxServiceImpl` có `@Service`, `implements XxxService`).
-- Controller và các service khác inject theo **kiểu interface**; Spring tự tiêm bean impl.
-- Repository **không** tách interface/impl: trong Spring Data JPA, repository vốn là interface đơn (`extends JpaRepository`) và Spring sinh class triển khai lúc runtime.
+Khi khởi động lần đầu, Hibernate tự tạo toàn bộ bảng (`ddl-auto=update`), sau đó `data.sql` và `knowledge_data.sql` seed dữ liệu mẫu tự động (idempotent — chạy lại không bị trùng).
 
-## Những điểm đã sửa so với spec gốc
-1. **Lombok** cho toàn bộ entity (`@Getter/@Setter/@NoArgsConstructor`) — spec gốc thiếu getter/setter.
-2. Bỏ `new User(userId)`; dùng `userRepository.getReferenceById(userId)` (đúng chuẩn JPA, tránh transient entity).
-3. **Mảng Postgres** dùng kiểu native Hibernate 6 (`@JdbcTypeCode(SqlTypes.ARRAY)` + `text[]`) thay cho thư viện `hibernate-types-60` (đã bỏ dependency).
-4. **CORS** cấu hình qua `CorsConfigurationSource` và gắn vào Spring Security (`.cors(...)`) — xử lý đúng preflight trên endpoint cần auth.
-5. Enum `MessageRole` chuẩn hoá `USER/AI`; service dùng `toUpperCase()` khi parse và trả về lowercase cho client.
-6. Thứ tự matcher bảo mật: `/api/expert-connections/*/status` (EXPERT) đặt trước `/api/experts/**`.
-7. Bổ sung các phần spec mới liệt kê tên: toàn bộ controllers, DTOs, `UserRoleRepository`, `UserPreferencesRepository`, `UserSavedContentRepository`, `MusicRecommendationRepository`, `JpaConfig`, `UserPrincipal`.
+---
 
-## Lưu ý
-- Phân tích cảm xúc/nguy cơ hiện ở dạng **rule-based** (từ khóa tiếng Việt). Interface giữ nguyên nên có thể thay bằng model NLP thật mà không đổi controller.
-- Project chưa được build/compile-verify trong môi trường tạo file (Maven Central không nằm trong domain được phép tải). Hãy chạy `mvn clean package` ở máy bạn; nếu thiếu dependency nào, kiểm tra kết nối mạng tới Maven Central.
+## Tài khoản mẫu (seed data)
+
+Password chung: `123456`
+
+| Email | Role | Ghi chú |
+|---|---|---|
+| `an@gmail.com` | USER | User thông thường |
+| `binh@gmail.com` | USER | User thông thường |
+| `cuong@gmail.com` | USER | User thông thường |
+| `dung@expert.com` | USER + EXPERT | Chuyên gia đã verified |
+| `em@expert.com` | USER + EXPERT | Chuyên gia đã verified |
+| `admin@mindora.com` | USER + ADMIN | Quản trị viên |
+
+---
+
+## Swagger UI
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+Nhấn **Authorize**, nhập `Bearer <token>` để test các API cần xác thực.
+
+---
+
+## API Endpoints
+
+### Auth (public)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| POST | `/api/auth/register` | Đăng ký tài khoản (`role`: `USER` hoặc `EXPERT`) |
+| POST | `/api/auth/login` | Đăng nhập, trả về JWT token |
+
+**Response body mẫu:**
+```json
+{
+  "token": "eyJ...",
+  "user": { "id": "...", "fullName": "Nguyễn Văn An", "roles": ["USER"] },
+  "conversationId": "..."
+}
+```
+
+### User & Preferences (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/users/profile` | Thông tin user hiện tại |
+| PUT | `/api/users/profile` | Cập nhật tên, avatar |
+| PATCH | `/api/users/preferences` | Cập nhật preferences (partial update) |
+
+### AI Chat — Dora (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/conversations` | Danh sách hội thoại chưa archive |
+| POST | `/api/conversations` | Tạo hội thoại mới |
+| GET | `/api/conversations/{id}/messages` | Lịch sử tin nhắn (phân trang) |
+| POST | `/api/conversations/{id}/messages` | Gửi tin nhắn thô (không có AI reply) |
+| **POST** | **`/api/conversations/{id}/chat`** | **Gửi tin nhắn → Dora tự động phản hồi (RAG pipeline)** |
+| DELETE | `/api/conversations/{id}/messages` | Xóa toàn bộ tin nhắn trong hội thoại |
+
+**Chat endpoint body:**
+```json
+{ "content": "Mình đang rất lo lắng về kỳ thi..." }
+```
+
+**Chat endpoint response:**
+```json
+{
+  "userMessage": { "..." },
+  "aiResponse": { "content": "Nghe có vẻ căng lắm đấy..." },
+  "retrievedSources": ["PFA-WHO — Kỹ thuật thở 4-7-8"]
+}
+```
+
+### Nhật ký cảm xúc (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/journals` | Danh sách nhật ký (phân trang, mới nhất trước) |
+| GET | `/api/journals/{id}` | Chi tiết 1 nhật ký |
+| POST | `/api/journals` | Tạo nhật ký (tự đồng bộ MoodLog nếu có `moodValue`) |
+| PUT | `/api/journals/{id}` | Cập nhật nhật ký |
+| DELETE | `/api/journals/{id}` | Xóa nhật ký |
+
+`moodValue` nhận: `loved` · `happy` · `neutral` · `anxious` · `sad` · `angry`
+
+### Tâm trạng (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| POST | `/api/moods` | Ghi nhận mood hôm nay (upsert theo ngày) |
+| GET | `/api/moods/week` | Mood 7 ngày gần nhất |
+| GET | `/api/moods/range?from=&to=` | Mood theo khoảng ngày |
+
+`moodScore`: 1 (rất tệ) → 7 (rất vui)
+
+### Phân tích sức khỏe tâm thần (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| POST | `/api/analysis/run` | Chạy phân tích dựa trên mood 7 ngày qua |
+| GET | `/api/analysis/latest` | Kết quả phân tích gần nhất |
+| GET | `/api/analysis/history` | Lịch sử phân tích |
+
+Kết quả trả về `riskLevel`: `low` · `medium` · `high` · `critical`
+Khi `critical`, hệ thống tự động tạo thông báo cảnh báo kèm số hotline `1800 599 920`.
+
+### Chuyên gia (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/experts` | Danh sách chuyên gia đã verified (phân trang) |
+| GET | `/api/experts/{id}` | Chi tiết 1 chuyên gia |
+
+### Kết nối chuyên gia (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| POST | `/api/expert-connections` | User gửi yêu cầu kết nối |
+| GET | `/api/expert-connections/my` | Danh sách yêu cầu của user hiện tại |
+| GET | `/api/expert-connections/incoming` | Yêu cầu gửi tới chuyên gia *(ROLE_EXPERT)* |
+| PUT | `/api/expert-connections/{id}/status` | Chuyên gia phản hồi *(ROLE_EXPERT)* |
+
+`status` nhận: `pending` · `accepted` · `rejected` · `closed`
+
+### Thư viện nội dung (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/content` | Danh sách nội dung (lọc `moodTag`, `contentType`) |
+| GET | `/api/content/saved` | Nội dung đã bookmark |
+| POST | `/api/content/{id}/save` | Bookmark nội dung |
+| DELETE | `/api/content/{id}/save` | Bỏ bookmark |
+
+`contentType`: `music` · `video` · `article` · `exercise`
+`moodTag`: `calm` · `happy` · `sad` · `energy` · `sleep`
+
+### Thông báo (yêu cầu auth)
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| GET | `/api/notifications` | Danh sách thông báo |
+| GET | `/api/notifications/unread` | Số thông báo chưa đọc (badge) |
+| PATCH | `/api/notifications/{id}/read` | Đánh dấu đã đọc |
+| PATCH | `/api/notifications/read-all` | Đánh dấu tất cả đã đọc |
+
+---
+
+## Kiến trúc tổng quan
+
+```
+Controller → Service (interface) → ServiceImpl → Repository → PostgreSQL
+                                 ↘ GeminiService (Gemini 2.0 Flash API)
+```
+
+### Các tầng chính
+
+```
+com.mindora/
+├── controller/       REST endpoints, @AuthenticationPrincipal
+├── service/          Interface cho mỗi domain
+│   └── impl/         Triển khai business logic, @Transactional
+├── repository/       Spring Data JPA (interface)
+├── entity/           JPA entities, kế thừa BaseEntity / AuditableEntity
+├── dto/
+│   ├── request/      Input validation (@Valid, @NotBlank...)
+│   └── response/     Record types, trả về client
+├── security/         JwtAuthFilter, JwtUtil, UserPrincipal
+├── exception/        GlobalExceptionHandler, custom exceptions
+└── config/           Security, CORS, JPA Auditing, Swagger
+```
+
+### RAG Pipeline (chatbot Dora)
+
+```
+User message
+    │
+    ├─ 1. RETRIEVE  → Tìm knowledge chunks theo emotion tag + keyword
+    ├─ 2. AUGMENT   → Ghép context + lịch sử hội thoại vào system prompt
+    ├─ 3. GENERATE  → Gọi Gemini 2.0 Flash API
+    └─ 4. FALLBACK  → Template response nếu không có API key hoặc lỗi mạng
+```
+
+Khi phát hiện `crisis` (từ khóa tự tử/tự hại), luồng bypass Gemini, luôn trả về hotline cứu trợ.
+
+### Entity hierarchy
+
+```
+BaseEntity (id: UUID, createdAt: Instant)
+    └── AuditableEntity (+ updatedAt: Instant)
+            ├── User
+            ├── Expert
+            ├── AiConversation
+            ├── JournalEntry
+            ├── ExpertConnection
+            ├── ContentLibrary
+            └── UserPreferences
+
+BaseEntity (không có updatedAt)
+    ├── MoodLog
+    ├── Message
+    ├── Notification
+    ├── MentalHealthAnalysis
+    └── KnowledgeDocument
+```
+
+---
+
+## Bảo mật
+
+- **JWT stateless** — không dùng session, mỗi request tự xác thực qua Bearer token.
+- **BCrypt** cost factor 10 cho password.
+- **IDOR protection** — mọi endpoint đọc/ghi dữ liệu đều kiểm tra `userId` từ token, không tin vào ID trong request body.
+- **Crisis bypass** — phát hiện từ khóa khủng hoảng → trả về hotline ngay, không qua Gemini.
+
+---
+
+## Công nghệ sử dụng
+
+| Thư viện | Phiên bản | Mục đích |
+|---|---|---|
+| Spring Boot | 3.3.4 | Framework chính |
+| Spring Security | (từ parent) | JWT auth, phân quyền |
+| Spring Data JPA | (từ parent) | ORM, repository |
+| PostgreSQL | runtime | Database |
+| Lombok | 1.18.36 | Giảm boilerplate |
+| JJWT | 0.11.5 | Tạo và xác thực JWT |
+| SpringDoc OpenAPI | 2.5.0 | Swagger UI |
