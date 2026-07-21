@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.Instant;
 
 /**
  * Thư viện nội dung chữa lành (nhạc, video, bài viết, bài tập thể dục).
@@ -18,7 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Entity
 @Table(name = "content_library")
-public class ContentLibrary extends BaseEntity {
+public class ContentLibrary extends AuditableEntity {
 
     @Column(nullable = false, length = 255)
     private String title;
@@ -36,6 +33,19 @@ public class ContentLibrary extends BaseEntity {
     @Column(name = "content_url", columnDefinition = "TEXT")
     private String contentUrl;
 
+    // Link bài hát gốc trên Spotify (tùy chọn) — nút "Nghe trên Spotify" ở FE.
+    // Khác với contentUrl: contentUrl là file audio phát được ngay (royalty-free),
+    // còn spotifyUrl chỉ phát full khi người dùng đã đăng nhập Spotify trên trình duyệt của họ.
+    @Column(name = "spotify_url", columnDefinition = "TEXT")
+    private String spotifyUrl;
+
+    // Video ID của MV/audio chính thức trên YouTube (chỉ 11 ký tự, vd "dQw4w9WgXcQ").
+    // Nhúng qua YouTube iframe embed — phát được bài hát THẬT (có lời) miễn phí,
+    // không cần đăng nhập tài khoản nào (khác spotifyUrl). Hợp pháp vì dùng tính năng
+    // embed công khai do YouTube cung cấp, không tự host file nhạc có bản quyền.
+    @Column(name = "youtube_id", length = 20)
+    private String youtubeId;
+
     @Column(name = "mood_tag", length = 50)
     private String moodTag;      // calm | happy | sad | energy | sleep
 
@@ -48,8 +58,4 @@ public class ContentLibrary extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private User createdBy;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private Instant updatedAt;
 }

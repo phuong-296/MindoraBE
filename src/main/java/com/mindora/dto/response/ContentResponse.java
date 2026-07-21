@@ -9,7 +9,8 @@ public record ContentResponse(
         String description,
         String thumbnailUrl,
         String contentUrl,
+        String spotifyUrl,
+        String youtubeId,
         String moodTag,
-        Integer durationMinutes,
-        Boolean isSaved
+        Integer durationMinutes
 ) {}
