@@ -33,6 +33,7 @@ public class MoodServiceImpl implements MoodService {
     );
 
     /** Upsert mood theo ngày: cập nhật nếu đã có bản ghi hôm đó, tạo mới nếu chưa. */
+    @Override
     @Transactional
     public MoodLogResponse logMood(UUID userId, MoodLogRequest req) {
         LocalDate date = req.getLogDate() != null ? req.getLogDate() : LocalDate.now();
@@ -55,6 +56,7 @@ public class MoodServiceImpl implements MoodService {
     }
 
     /** Lấy mood 7 ngày gần nhất (hôm nay - 6 ngày đến hôm nay). */
+    @Override
     @Transactional(readOnly = true)
     public List<MoodLogResponse> getWeek(UUID userId) {
         LocalDate to = LocalDate.now();
@@ -62,6 +64,7 @@ public class MoodServiceImpl implements MoodService {
         return getRange(userId, from, to);
     }
 
+    @Override
     @Transactional(readOnly = true)
     public List<MoodLogResponse> getRange(UUID userId, LocalDate from, LocalDate to) {
         return moodLogRepository
