@@ -44,6 +44,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Cho phép đăng ký / đăng nhập mà không cần token
                 .requestMatchers("/api/auth/**").permitAll()
+                // Chat khách (chưa đăng nhập) — không lưu DB, xem GuestChatController
+                .requestMatchers("/api/chat/guest").permitAll()
                 .requestMatchers("/error").permitAll()
                 // Swagger UI — không cần auth
                 .requestMatchers(
@@ -52,9 +54,6 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/v3/api-docs.yaml"
                 ).permitAll()
-                // Endpoint chỉ dành cho EXPERT đặt TRƯỚC rule chung của /api/experts/**
-                .requestMatchers("/api/expert-connections/*/status").hasRole("EXPERT")
-                .requestMatchers("/api/experts/**").hasAnyRole("USER", "EXPERT", "ADMIN")
                 // Tất cả endpoint còn lại đều yêu cầu đăng nhập
                 .anyRequest().authenticated()
             )

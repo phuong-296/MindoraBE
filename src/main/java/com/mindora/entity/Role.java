@@ -20,7 +20,7 @@ import lombok.Setter;
 public class Role extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 50)
-    private String name;   // USER | ADMIN | EXPERT
+    private String name;
 
     private String description;
 }
