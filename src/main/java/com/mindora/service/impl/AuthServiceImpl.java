@@ -17,12 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Xử lý đăng ký và đăng nhập.
- * register(): tạo user, gán role, tạo preferences mặc định và conversation đầu tiên trong 1 transaction.
+ * register(): tạo user, gán role và conversation đầu tiên trong 1 transaction.
  * login(): dùng AuthenticationManager để xác thực (BCrypt so sánh password), trả về JWT + conversation gần nhất.
  */
 @Service
@@ -32,13 +33,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserRoleRepository userRoleRepository;
-    private final UserPreferencesRepository preferencesRepository;
     private final AiConversationRepository conversationRepository;
-    private final ExpertRepository expertRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authManager;
 
+    @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -52,11 +52,9 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
 
-        // 2. Xác định role (mặc định USER nếu không truyền)
-        String requestedRole = (request.getRole() != null) ? request.getRole().toUpperCase() : "USER";
-        List<String> assignedRoles = new java.util.ArrayList<>();
-
-        // Luôn gán role USER cho mọi tài khoản
+        // 2. Gán role USER cho mọi tài khoản (tính năng đăng ký EXPERT đã bị gỡ bỏ vì không
+        // được frontend sử dụng — xem ghi chú trong RegisterRequest.java)
+        List<String> assignedRoles = new ArrayList<>();
         Role userRole = roleRepository.findByName("USER")
                 .orElseThrow(() -> new ResourceNotFoundException("Role USER không tồn tại"));
         UserRole userRoleEntity = new UserRole();
@@ -65,30 +63,7 @@ public class AuthServiceImpl implements AuthService {
         userRoleRepository.save(userRoleEntity);
         assignedRoles.add("USER");
 
-        // Nếu đăng ký là EXPERT → gán thêm role EXPERT + tạo Expert profile (chưa verified)
-        if ("EXPERT".equals(requestedRole)) {
-            Role expertRole = roleRepository.findByName("EXPERT")
-                    .orElseThrow(() -> new ResourceNotFoundException("Role EXPERT không tồn tại"));
-            UserRole expertRoleEntity = new UserRole();
-            expertRoleEntity.setUser(user);
-            expertRoleEntity.setRole(expertRole);
-            userRoleRepository.save(expertRoleEntity);
-            assignedRoles.add("EXPERT");
-
-            // Tạo Expert profile mặc định, admin sẽ verify sau
-            Expert expert = new Expert();
-            expert.setUser(user);
-            expert.setIsVerified(false);
-            expert.setIsOnline(false);
-            expertRepository.save(expert);
-        }
-
-        // 3. Tạo preferences mặc định (language=vi, notification=daily...)
-        UserPreferences prefs = new UserPreferences();
-        prefs.setUser(user);
-        preferencesRepository.save(prefs);
-
-        // 4. Tạo conversation đầu tiên để frontend có thể dùng ngay sau đăng ký
+        // 3. Tạo conversation đầu tiên để frontend có thể dùng ngay sau đăng ký
         AiConversation conv = new AiConversation();
         conv.setUser(user);
         conv.setTitle("Cuộc trò chuyện đầu tiên");
@@ -98,6 +73,7 @@ public class AuthServiceImpl implements AuthService {
         return new AuthResponse(token, toUserResponse(user, assignedRoles), conv.getId());
     }
 
+    @Override
     @Transactional
     public AuthResponse login(LoginRequest request) {
         // AuthenticationManager kiểm tra email + password qua CustomUserDetailsService và BCrypt
