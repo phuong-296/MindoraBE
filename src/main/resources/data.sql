@@ -42,13 +42,13 @@ ON CONFLICT (user_id, role_id) DO NOTHING;
 
 -- ===================== AI CONVERSATIONS =====================
 INSERT INTO ai_conversations (id, user_id, title, is_archived, created_at, updated_at) VALUES
-  -- User An: 2 conversations
-
-  ('f0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001', 'Tâm sự về công việc',               false, now() - interval '5 days',  now()),
-  -- User Bình: 1 conversation
-  ('f0000000-0000-0000-0000-000000000003', 'b0000000-0000-0000-0000-000000000002', 'Cuộc trò chuyện đầu tiên',          false, now() - interval '20 days', now() - interval '3 days'),
-  -- User Cường: 1 conversation
-  ('f0000000-0000-0000-0000-000000000004', 'b0000000-0000-0000-0000-000000000003', 'Cuộc trò chuyện đầu tiên',          false, now() - interval '15 days', now() - interval '2 days')
+                                                                                           -- User An: 2 conversations
+                                                                                           ('f0000000-0000-0000-0000-000000000001', 'b0000000-0000-0000-0000-000000000001', 'Lo lắng về kỳ thi', false, now() - interval '28 days', now() - interval '28 days'),
+                                                                                           ('f0000000-0000-0000-0000-000000000002', 'b0000000-0000-0000-0000-000000000001', 'Tâm sự về công việc',               false, now() - interval '5 days',  now()),
+                                                                                           -- User Bình: 1 conversation
+                                                                                           ('f0000000-0000-0000-0000-000000000003', 'b0000000-0000-0000-0000-000000000002', 'Cuộc trò chuyện đầu tiên',          false, now() - interval '20 days', now() - interval '3 days'),
+                                                                                           -- User Cường: 1 conversation
+                                                                                           ('f0000000-0000-0000-0000-000000000004', 'b0000000-0000-0000-0000-000000000003', 'Cuộc trò chuyện đầu tiên',          false, now() - interval '15 days', now() - interval '2 days')
 ON CONFLICT (id) DO NOTHING;
 
 
